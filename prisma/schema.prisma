@@ -1,8 +1,77 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+// model User {
+//   id            String    @id
+//   name          String
+//   email         String
+//   emailVerified Boolean
+//   image         String?
+//   createdAt     DateTime
+//   updatedAt     DateTime
+//   sessions      Session[]
+//   accounts      Account[]
+
+//   @@unique([email])
+//   @@map("user")
+// }
+
+// model Session {
+//   id        String   @id
+//   expiresAt DateTime
+//   token     String
+//   createdAt DateTime
+//   updatedAt DateTime
+//   ipAddress String?
+//   userAgent String?
+//   userId    String
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@unique([token])
+//   @@map("session")
+// }
+
+// model Account {
+//   id                    String    @id
+//   accountId             String
+//   providerId            String
+//   userId                String
+//   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   accessToken           String?
+//   refreshToken          String?
+//   idToken               String?
+//   accessTokenExpiresAt  DateTime?
+//   refreshTokenExpiresAt DateTime?
+//   scope                 String?
+//   password              String?
+//   createdAt             DateTime
+//   updatedAt             DateTime
+
+//   @@map("account")
+// }
+
+// model Verification {
+//   id         String    @id
+//   identifier String
+//   value      String
+//   expiresAt  DateTime
+//   createdAt  DateTime?
+//   updatedAt  DateTime?
+
+//   @@map("verification")
+// }
 
 generator client {
   provider = "prisma-client-js"
@@ -14,9 +83,11 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String    @id @default(uuid())
   name          String
   email         String
+  passwordHash  String?
+  role          Role
   emailVerified Boolean
   image         String?
   createdAt     DateTime
@@ -71,4 +142,96 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+// model Employee {
+//   id            Int          @id @default(autoincrement())
+//   userId        Int          @unique
+//   phone         String
+//   address       String
+//   dateOfBirth   DateTime
+//   joinDate      DateTime
+//   user          User         @relation(fields: [userId], references: [id])
+//   attendances   Attendancsssssssssse[]
+//   payslips      Payslip[]
+//   leaveRequests Leave[]
+//   onboarding    Onboarding?
+
+//   @@map("employees")
+// }
+
+// model Job {
+//   id           Int           @id @default(autoincrement())
+//   title        String
+//   description  String
+//   location     String
+//   createdAt    DateTime      @default(now())
+//   updatedAt    DateTime      @updatedAt
+//   applications Application[]
+
+//   @@map("jobs")
+// }
+
+// model Application {
+//   id     Int               @id @default(autoincrement())
+//   userId Int
+//   jobId  Int
+//   status ApplicationStatus
+//   user   User              @relation(fields: [userId], references: [id])
+//   job    Job               @relation(fields: [jobId], references: [id])
+
+//   @@map("applications")
+// }
+
+// model Attendance {
+//   id           Int      @id @default(autoincrement())
+//   employeeId   Int
+//   clockInTime  DateTime
+//   clockOutTime DateTime
+//   totalHours   Float
+//   employee     Employee @relation(fields: [employeeId], references: [id])
+
+//   @@map("attendances")
+// }
+
+// model Payslip {
+//   id             Int      @id @default(autoincrement())
+//   employeeId     Int
+//   payPeriodStart DateTime
+//   payPeriodEnd   DateTime
+//   grossAmount    Float
+//   netAmount      Float
+//   deductions     Float
+//   createdAt      DateTime @default(now())
+//   employee       Employee @relation(fields: [employeeId], references: [id])
+
+//   @@map("payslips")
+// }
+
+// model Leave {
+//   id         Int         @id @default(autoincrement())
+//   employeeId Int
+//   leaveType  LeaveType
+//   startDate  DateTime
+//   endDate    DateTime
+//   status     LeaveStatus
+//   employee   Employee    @relation(fields: [employeeId], references: [id])
+
+//   @@map("leaves")
+// }
+
+// model Onboarding {
+//   id               Int              @id @default(autoincrement())
+//   employeeId       Int              @unique
+//   onboardingStatus OnboardingStatus
+//   onboardingDate   DateTime
+//   createdAt        DateTime         @default(now())
+//   employee         Employee         @relation(fields: [employeeId], references: [id])
+
+//   @@map("onboardings")
+// }
+
+enum Role {
+  user
+  admin
 }
