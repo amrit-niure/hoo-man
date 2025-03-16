@@ -1,16 +1,9 @@
 import React from 'react'
-import { headers } from "next/headers";
-import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth';
+import { getSessionData } from '@/lib/get-session-data';
  
 export default async function AdminDashboard() {
-  const session = await auth.api.getSession({
-    headers: await headers() 
-})
+  const session = await getSessionData();
 
-if (!session) {
-    redirect("/admin/signin")
-}
   return (
     <div>
       Admin Dashbaord

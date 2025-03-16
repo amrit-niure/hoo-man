@@ -18,34 +18,44 @@ import { useState } from "react";
 import { CustomSpinner } from "@/app/components/common/spinner";
 import { PasswordInput } from "@/app/components/ui-extension/password-input";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function ProviderSignUpForm() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<ISignUp>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
       email: "",
       password: "",
-      role: "admin",
+      role: "ADMIN",
       orgName: "",
     },
   });
 
   async function onSubmit(values: ISignUp) {
     setLoading(true);
-    const { data, error } = await authClient.signUp.email({
-      name: values.orgName,
-      email: values.email,
-      password: values.password,
-      role: "admin",
-      callbackURL: "/dashboard",
-    });
-    if (error) {
-      toast.error(error.message);
-    }
-    if (data) {
-      toast.success("Sign up successful");
-    }
+    await authClient.signUp.email(
+      {
+        name: values.orgName,
+        email: values.email,
+        password: values.password,
+        role: "ADMIN",
+        callbackURL: "/signin",
+      },
+      {
+        onRequest: () => {
+          toast.info("Creating account...");
+        },
+        onSuccess: (ctx) => {
+          toast.success("Account created successfully");
+          router.push("/signin");
+        },
+        onError: (error) => {
+          toast.error(error.error.message);
+        },
+      }
+    );
     setLoading(false);
   }
 
@@ -62,11 +72,7 @@ export default function ProviderSignUpForm() {
             <FormItem>
               <FormLabel>Organization Name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Intel Corporation"
-                  type="text"
-                  {...field}
-                />
+                <Input placeholder="Intel Corporation" type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -108,7 +114,7 @@ export default function ProviderSignUpForm() {
         />
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? <CustomSpinner className="h-4 w-4" /> : "Sign In"}
+          {loading ? <CustomSpinner className="h-4 w-4" /> : "Sign up"}
         </Button>
       </form>
     </Form>

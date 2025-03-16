@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "./components/common/theme-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
+// const signikaNegative = Ubuntu_Sans({
+//   variable: "--font-signika-negative",
+//   subsets: ["latin"],
+// });
 export const metadata: Metadata = {
   title: "HR & Payroll Management System",
   description: "A comprehensive HR and payroll management solution",
@@ -18,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={geistSans.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

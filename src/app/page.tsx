@@ -1,92 +1,3 @@
-// import Link from "next/link";
-
-// export default async function Home() {
-//   return (
-//     <div className="flex min-h-screen items-center justify-center gap-4 flex-col">
-//       {/* <div className="flex gap-4">
-//         <form>
-//           <button
-//             className="px-4 py-2 rounded-sm bg-slate-100 text-sm  cursor-pointer hover:bg-slate-200"
-//             onClick={async () => {
-//               "use server";
-//               await auth.api.signUpEmail({
-//                 body: {
-//                   email: "email@gmail.com",
-//                   password: "password12345",
-//                   name: "Amrit Niure",
-//                 },
-//                 asResponse: true,
-//               });
-//             }}
-//           >
-//             Sign Up
-//           </button>
-//         </form>
-//         <form>
-//           <button
-//             className="px-4 py-2 rounded-sm bg-slate-800 text-sm text-white cursor-pointer hover:bg-slate-800/90"
-//             onClick={async () => {
-//               "use server";
-//               const res = await auth.api.signInEmail({
-//                 body: {
-//                   email: "email@gmail.com",
-//                   password: "password12345",
-//                   redirect: "/dashboard",
-//                 },
-//                 asResponse: true,
-//               });
-//               console.log(res)
-//               if (res.ok) {
-//                 const setCookieHeader = res.headers.get('set-cookie');
-//                 if (setCookieHeader) {
-//                   // Manually set the cookie using the `Set-Cookie` header
-//                   const response = new Response(null, {
-//                     headers: {
-//                       'Set-Cookie': setCookieHeader,
-//                     },
-//                   });
-//                   return response;
-//                 }
-//                 redirect("/dashboard");
-//               }
-//             }}
-//           >
-//             Sign In
-//           </button>
-//         </form>
-//       </div> */}
-//       <div className="flex gap-4">
-//         <Link
-//           href={"/admin/signup"}
-//           className="px-4 py-2 rounded-sm hover:bg-neutral-50 bg-white text-sm  cursor-pointer border-2 border-slate-200"
-//         >
-//           {" "}
-//           Sign Up
-//         </Link>{" "}
-//         <Link
-//           href={"/admin/signin"}
-//           className="px-4 py-2 rounded-sm hover:bg-neutral-50 bg-white text-sm  cursor-pointer border-2 border-slate-200"
-//         >
-//           {" "}
-//           Sign In
-//         </Link>{" "}
-//       </div>
-//       <div>
-//         <Link
-//           href={"/dashboard"}
-//           className="px-4 py-2 rounded-sm hover:bg-neutral-50 bg-white text-sm  cursor-pointer border-2 border-slate-200"
-//         >
-//           {" "}
-//           Dashboard
-//         </Link>{" "}
-//       </div>
-//       {/* <div>
-//         <SignOut />
-//       </div> */}
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -124,13 +35,15 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "next-themes";
+import { getClientSession } from "@/lib/get-session";
 
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
+  const data = getClientSession();
+  
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => {
@@ -213,7 +126,7 @@ export default function LandingPage() {
         <div className="container flex h-16 items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-2 font-bold px-4">
             <div className="size-8 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground">
-              S
+              H
             </div>
             <span>Hoo-man</span>
           </div>
@@ -258,15 +171,15 @@ export default function LandingPage() {
               <span className="sr-only">Toggle theme</span>
             </Button>
             <Link
-            href={"/admin/signin"}
-              className={buttonVariants({variant: "link"})}
+              href={"/signin"}
+              className={buttonVariants({ variant: "link" })}
             >
-              Log in
+              Sign In
             </Link>
-            <Button >
+            <Link href={"/signin"} className={buttonVariants()}>
               Get Started
               <ChevronRight className="ml-1 size-4" />
-            </Button>
+            </Link>
           </div>
           <div className="flex items-center gap-4 md:hidden ">
             <Button
@@ -340,7 +253,7 @@ export default function LandingPage() {
                 >
                   Log in
                 </Link>
-                <Button >
+                <Button>
                   Get Started
                   <ChevronRight className="ml-1 size-4" />
                 </Button>
@@ -376,19 +289,18 @@ export default function LandingPage() {
                 efficiency across your organization.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg">
+                <Link
+                  href={"#pricing"}
+                  className={buttonVariants({ size: "lg" })}
+                >
                   Start Free Trial
                   <ArrowRight className="ml-2 size-4" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                >
+                </Link>
+                <Button size="lg" variant="outline">
                   Book a Demo
                 </Button>
               </div>
               <div className="flex items-center justify-center gap-4 mt-6 text-sm text-muted-foreground">
-                
                 <div className="flex items-center gap-1">
                   <Check className="size-4 text-primary" />
                   <span>14-day trial</span>
@@ -679,6 +591,8 @@ export default function LandingPage() {
                           "Manual payroll",
                         ],
                         cta: "Start Free Trial",
+                        paymentLink:
+                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
                       },
                       {
                         name: "Pro",
@@ -692,6 +606,8 @@ export default function LandingPage() {
                         ],
                         cta: "Start Free Trial",
                         popular: true,
+                        paymentLink:
+                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
                       },
                       {
                         name: "Enterprise",
@@ -704,7 +620,9 @@ export default function LandingPage() {
                           "Advanced analytics",
                           "Priority support",
                         ],
-                        cta: "Contact Sales",
+                        cta: "Start Free Trial",
+                        paymentLink:
+                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
                       },
                     ].map((plan, i) => (
                       <motion.div
@@ -747,16 +665,19 @@ export default function LandingPage() {
                                 </li>
                               ))}
                             </ul>
-                            <Button
-                              className={`w-full mt-auto rounded-full ${
-                                plan.popular
-                                  ? "bg-primary hover:bg-primary/90"
-                                  : "bg-muted hover:bg-muted/80"
-                              }`}
-                              variant={plan.popular ? "default" : "outline"}
+                            <Link
+                              href={plan.paymentLink}
+                              className={buttonVariants({
+                                variant: plan.popular ? "default" : "outline",
+                                className: ` !rounded-full ${
+                                  plan.popular
+                                    ? "bg-primary hover:bg-primary/90"
+                                    : "bg-muted hover:bg-muted/80"
+                                }`,
+                              })}
                             >
                               {plan.cta}
-                            </Button>
+                            </Link>
                           </CardContent>
                         </Card>
                       </motion.div>
@@ -776,6 +697,8 @@ export default function LandingPage() {
                           "Manual payroll",
                         ],
                         cta: "Start Free Trial",
+                        paymentLink:
+                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
                       },
                       {
                         name: "Pro",
@@ -789,6 +712,8 @@ export default function LandingPage() {
                         ],
                         cta: "Start Free Trial",
                         popular: true,
+                        paymentLink:
+                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
                       },
                       {
                         name: "Enterprise",
@@ -801,7 +726,9 @@ export default function LandingPage() {
                           "Advanced analytics",
                           "Priority support",
                         ],
-                        cta: "Contact Sales",
+                        cta: "Start Free Trial",
+                        paymentLink:
+                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
                       },
                     ].map((plan, i) => (
                       <motion.div
@@ -887,8 +814,9 @@ export default function LandingPage() {
                 The Minds Behind Hoo-man
               </h2>
               <p className="max-w-[800px] text-muted-foreground md:text-lg">
-                A dedicated group of final-year students passionate about
-                building innovative solutions to streamline HR processes.
+                A dedicated group ( Group - 8 ) of final-year students
+                passionate about building innovative solutions to streamline HR
+                processes.
               </p>
             </motion.div>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -948,7 +876,7 @@ export default function LandingPage() {
                       alt={member.name}
                       layout="fill"
                       objectFit="cover"
-                      className="rounded-t-lg"
+                      className="rounded-t-lg rounded-2xl"
                     />
                   </div>
                   <CardContent className="p-6">
@@ -1103,20 +1031,12 @@ export default function LandingPage() {
                 HR processes with Hoo-man.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                >
+                <Button size="lg" variant="secondary">
                   Start Free Trial
                   <ArrowRight className="ml-2 size-4" />
                 </Button>
-                <Button
-                  size="lg"
-                >
-                  Schedule a Demo
-                </Button>
+                <Button size="lg">Schedule a Demo</Button>
               </div>
-             
             </motion.div>
           </div>
         </section>

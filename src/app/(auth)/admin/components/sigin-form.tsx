@@ -19,7 +19,7 @@ import { CustomSpinner } from "@/app/components/common/spinner";
 import { PasswordInput } from "@/app/components/ui-extension/password-input";
 import { authClient } from "@/lib/auth-client";
 
-export default function ProviderSignInForm() {
+export default function SignInForm() {
   const [loading, setLoading] = useState(false);
   const form = useForm<ISignIn>({
     resolver: zodResolver(signInFormSchema),
@@ -31,18 +31,23 @@ export default function ProviderSignInForm() {
 
   async function onSubmit(values: ISignIn) {
     setLoading(true);
-    const { data, error } = await authClient.signIn.email({
-      email: values.email,
-      password: values.password,
-      callbackURL: "/dashboard",
-      rememberMe: false,
-    });
-    if (error) {
-      toast.error(error.message);
-    }
-    if (data) {
-      toast.success("Sign in successful");
-    }
+ await authClient.signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+        callbackURL: "/onboarding",
+        rememberMe: false,
+      },
+      {
+        onRequest: () => {
+          toast.info("Please wait, signing you in...");
+        },
+        onError: (error) => {
+          toast.error(error.error.message);
+        },
+      }
+    );
+
     setLoading(false);
   }
 
@@ -50,7 +55,7 @@ export default function ProviderSignInForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 max-w-lg mx-auto w-full p-10"
+        className="space-y-6 max-w-lg mx-auto w-full px-10 "
       >
         <FormField
           control={form.control}
