@@ -1,7 +1,10 @@
 import { cn } from "@/lib/utils";
 import * as React from "react";
 
-interface CustomSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+interface CustomSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
 
 const CustomSpinner = React.forwardRef<HTMLDivElement, CustomSpinnerProps>(
   ({ className, ...props }, ref) => {
