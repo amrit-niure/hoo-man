@@ -9,18 +9,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Mail, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Employee } from "@prisma/client";
 
-export interface Employee {
-  id: string;
-  name: string;
-  position: string;
-  department: string;
-  email: string;
-  phone: string;
-  avatar?: string;
-  status: "active" | "on-leave" | "inactive";
-  hireDate: string;
-}
+// export interface Employee {
+//   id: string;
+//   name: string;
+//   position: string;
+//   department: string;
+//   email: string;
+//   phone: string;
+//   avatar?: string;
+//   status: "active" | "on-leave" | "inactive";
+//   hireDate: string;
+// }
 
 interface EmployeeCardProps {
   employee: Employee;
@@ -79,7 +80,7 @@ const EmployeeCard = ({ employee, onView, onEdit }: EmployeeCardProps) => {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Hire Date</p>
-                <p className="text-sm">{employee.hireDate}</p>
+                <p className="text-sm">{employee.joinDate.toLocaleDateString()}</p>
               </div>
             </div>
           </div>
@@ -98,10 +99,13 @@ const EmployeeCard = ({ employee, onView, onEdit }: EmployeeCardProps) => {
           <div className="mt-auto p-4 pt-2 border-t border-border flex justify-between items-center">
             <span className={cn(
               "text-xs px-2 py-1 rounded-full font-medium",
-              statusStyles[employee.status]
+              statusStyles[employee.status as keyof typeof statusStyles]
             )}>
-              {employee.status === "active" ? "Active" : 
-               employee.status === "on-leave" ? "On Leave" : "Inactive"}
+                {employee.status === "ACTIVE" ? "Active" : 
+                 employee.status === "ON_LEAVE" ? "On Leave" :
+                 employee.status === "INACTIVE" ? "Inactive" :
+                 employee.status === "RESIGNED" ? "Resigned" :
+                 employee.status === "TERMINATED" ? "Terminated" : "Inactive"}
             </span>
             <Button 
               variant="ghost" 

@@ -15,7 +15,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { addEmployeeSchema, IAddEmployee } from "./validation";
-
+import { addEmployee } from "../actions";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Department } from "@prisma/client";
+import { set } from "date-fns";
+import { CustomSpinner } from "@/app/components/common/spinner";
 
 interface AddEmployeeFormProps {
   onClose: () => void;
@@ -32,20 +42,31 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onClose }) => {
       address: "",
       dateOfBirth: undefined,
       joinDate: undefined,
+      department: undefined,
+      position: "",
     },
   });
 
   // Handle form submission
   const onSubmit = async (data: IAddEmployee) => {
+    setIsLoading(true);
     try {
-      toast.success("Employee added successfully!");
+      const result = await addEmployee(data);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
       form.reset();
-      onClose(); 
+      setIsLoading(false);
+      onClose();
     } catch (error) {
       console.error(error);
       toast.error("Failed to add employee. Please try again.");
     }
   };
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   return (
     <Form {...form}>
@@ -124,6 +145,47 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onClose }) => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="department"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Department</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(Department).map((department) => (
+                      <SelectItem key={department} value={department}>
+                        {department.replace(/_/g, " ")}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="position"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Position</FormLabel>
+              <FormControl>
+                <Input placeholder="Software Engineer" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Date of Birth */}
         <FormField
@@ -133,10 +195,12 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onClose }) => {
             <FormItem>
               <FormLabel>Date of Birth</FormLabel>
               <FormControl>
-              <Input
+                <Input
                   type="date"
                   {...field}
-                  value={field.value ? field.value.toISOString().split("T")[0] : ""}
+                  value={
+                    field.value ? field.value.toISOString().split("T")[0] : ""
+                  }
                   onChange={(e) => field.onChange(new Date(e.target.value))}
                 />
               </FormControl>
@@ -153,10 +217,12 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onClose }) => {
             <FormItem>
               <FormLabel>Join Date</FormLabel>
               <FormControl>
-              <Input
+                <Input
                   type="date"
                   {...field}
-                  value={field.value ? field.value.toISOString().split("T")[0] : ""}
+                  value={
+                    field.value ? field.value.toISOString().split("T")[0] : ""
+                  }
                   onChange={(e) => field.onChange(new Date(e.target.value))}
                 />
               </FormControl>
@@ -166,8 +232,8 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onClose }) => {
         />
 
         {/* Submit Button */}
-        <Button type="submit" className="w-full">
-          Add Employee
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? <CustomSpinner />: "Add Employee"}
         </Button>
       </form>
     </Form>

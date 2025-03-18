@@ -1,4 +1,5 @@
 // schemas.ts
+import { Department } from "@prisma/client";
 import { z } from "zod";
 
 // Define the schema for employee registration
@@ -10,6 +11,8 @@ export const addEmployeeSchema = z.object({
   address: z.string().min(5, "Address must be at least 5 characters"),
   dateOfBirth: z.coerce.date({ required_error: "Date of birth is required" }),
   joinDate: z.coerce.date({ required_error: "Join date is required" }),
+  department: z.nativeEnum(Department),
+  position: z.string().min(2, "Position must be at least 2 characters"),
 });
 
 // Infer the TypeScript type from the schema

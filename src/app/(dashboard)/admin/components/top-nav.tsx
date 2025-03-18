@@ -15,10 +15,13 @@ import React from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ChevronRight, LogOut } from "lucide-react";
 import { Notifications } from "./notifications";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 
 export function TopNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const pathSegments = pathname?.split("/").filter(Boolean);
 
   return (
@@ -79,7 +82,15 @@ export function TopNav() {
                   Settings
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={async () => {
+                await authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push("/signin"); 
+                    },
+                  },
+                });
+              }}>
                 <LogOut />
                 Log out
               </DropdownMenuItem>

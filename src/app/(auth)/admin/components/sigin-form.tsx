@@ -31,7 +31,7 @@ export default function SignInForm() {
 
   async function onSubmit(values: ISignIn) {
     setLoading(true);
- await authClient.signIn.email(
+    await authClient.signIn.email(
       {
         email: values.email,
         password: values.password,

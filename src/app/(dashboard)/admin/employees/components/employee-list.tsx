@@ -10,77 +10,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, Plus, Filter } from "lucide-react";
-import EmployeeCard, { Employee } from "./employee-card";
+import EmployeeCard from "./employee-card";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import AddEmployeeForm from "./add-employee-form";
+import { Employee } from "@prisma/client";
 
-// Mock data for employees
-const mockEmployees: Employee[] = [
-  {
-    id: "1",
-    name: "Jane Cooper",
-    position: "Marketing Director",
-    department: "Marketing",
-    email: "jane.cooper@example.com",
-    phone: "(555) 123-4567",
-    status: "active",
-    hireDate: "Jun 15, 2019",
-  },
-  {
-    id: "2",
-    name: "Robert Fox",
-    position: "Senior Developer",
-    department: "Engineering",
-    email: "robert.fox@example.com",
-    phone: "(555) 234-5678",
-    status: "active",
-    hireDate: "Feb 3, 2021",
-  },
-  {
-    id: "3",
-    name: "Esther Howard",
-    position: "HR Manager",
-    department: "Human Resources",
-    email: "esther.howard@example.com",
-    phone: "(555) 345-6789",
-    status: "active",
-    hireDate: "Nov 10, 2020",
-  },
-  {
-    id: "4",
-    name: "Jenny Wilson",
-    position: "UI Designer",
-    department: "Design",
-    email: "jenny.wilson@example.com",
-    phone: "(555) 456-7890",
-    status: "on-leave",
-    hireDate: "Apr 22, 2020",
-  },
-  {
-    id: "5",
-    name: "Leslie Alexander",
-    position: "Financial Analyst",
-    department: "Finance",
-    email: "leslie.alexander@example.com",
-    phone: "(555) 567-8901",
-    status: "inactive",
-    hireDate: "Aug 5, 2018",
-  },
-  {
-    id: "6",
-    name: "Wade Cooper",
-    position: "Product Manager",
-    department: "Product",
-    email: "wade.cooper@example.com",
-    phone: "(555) 678-9012",
-    status: "active",
-    hireDate: "Mar 12, 2022",
-  },
-];
-
-const EmployeeList = () => {
-  const [employees] = useState<Employee[]>(mockEmployees);
+const EmployeeList = ({ourEmployees }: {ourEmployees : Employee[]}) => {
+  const [employees] = useState<Employee[]>(ourEmployees);
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState<string | null>(null); // Allow null for no selection
   const [statusFilter, setStatusFilter] = useState<string | null>(null); // Allow null for no selection

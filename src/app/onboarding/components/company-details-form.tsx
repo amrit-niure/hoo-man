@@ -17,6 +17,8 @@ import { toast } from "sonner";
 import { addCompanySchema, IAddCompany } from "./validation";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { createCompanyProfile } from "../actions";
+import { redirect } from "next/navigation";
 
 interface CompanyDetailsFormProps {}
 
@@ -39,8 +41,17 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = () => {
 
   // Handle form submission
   const onSubmit = async (data: IAddCompany) => {
+    console.log(data)
     try {
+      const res = await createCompanyProfile(data);
+      if (!res.success) {
+        toast.error("Failed to add company details. Please try again.");
+        return;
+      }
       toast.success("Company details added successfully!");
+      if (res.redirectPath) {
+        redirect(res.redirectPath);
+      }
       form.reset(); 
     } catch (error) {
       console.error(error);
