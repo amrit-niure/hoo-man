@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   ArrowLeft,
-  UserSearch,
 } from "lucide-react";
 import LoginLeftPanel from "@/components/login-leftg-panel";
 import SignInForm from "../admin/components/sigin-form";

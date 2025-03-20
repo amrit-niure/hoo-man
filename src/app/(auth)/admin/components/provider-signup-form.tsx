@@ -47,7 +47,7 @@ export default function ProviderSignUpForm() {
         onRequest: () => {
           toast.info("Creating account...");
         },
-        onSuccess: (ctx) => {
+        onSuccess: () => {
           toast.success("Account created successfully");
           router.push("/signin");
         },

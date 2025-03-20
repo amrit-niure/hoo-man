@@ -1,4 +1,4 @@
-import LogOut from "@/app/components/common/log-out";
+
 import { Button } from "@/components/ui/button";
 import { getSessionData } from "@/lib/get-session-data";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export default async function Client() {
       <Link href="/">
         <Button variant="outline">Go to HomePage</Button>
       </Link>
-      <LogOut />
+      {/* <LogOut /> */}
     </div>
   );
 }

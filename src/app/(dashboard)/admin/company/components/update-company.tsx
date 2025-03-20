@@ -26,7 +26,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { updateCompanyProfile } from "@/app/onboarding/actions";
-import { redirect } from "next/navigation";
 
 // Form schema
 const companySchema = z.object({

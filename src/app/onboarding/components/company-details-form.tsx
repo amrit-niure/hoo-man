@@ -20,9 +20,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { createCompanyProfile } from "../actions";
 import { redirect } from "next/navigation";
 
-interface CompanyDetailsFormProps {}
-
-const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = () => {
+const CompanyDetailsForm: React.FC = () => {
   const form = useForm<IAddCompany>({
     resolver: zodResolver(addCompanySchema),
     defaultValues: {

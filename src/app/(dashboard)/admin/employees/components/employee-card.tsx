@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Mail, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Employee } from "@prisma/client";
+import Image from "next/image";
 
 // export interface Employee {
 //   id: string;
@@ -44,7 +45,9 @@ const EmployeeCard = ({ employee, onView, onEdit }: EmployeeCardProps) => {
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
                 {employee.avatar ? (
-                  <img 
+                  <Image
+                    width={48}
+                    height={48} 
                     src={employee.avatar} 
                     alt={employee.name} 
                     className="h-full w-full rounded-full object-cover"
