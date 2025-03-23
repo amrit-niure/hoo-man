@@ -822,43 +822,43 @@ export default function LandingPage() {
               {[
                 {
                   name: "Amrit Niure",
-                  role: "Project Lead & Full Stack Developer",
+                  role: "Project Lead & Software Engineer",
                   email: "217908@students.aih.edu.au",
                   studentId: "217908",
                   github: "https://github.com/amrit-niure",
                   twitter: "https://twitter.com/amrit-niure",
                   image:
-                    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+                    "/team/amrit.jpg",
                 },
                 {
                   name: "Prajita Shrestha",
                   role: "Frontend Developer & UI/UX Designer",
-                  email: "217908@students.aih.edu.au",
-                  studentId: "S2345678",
-                  github: "https://github.com/janesmith",
-                  twitter: "https://twitter.com/janesmith",
+                  email: "217838@students.aih.edu.au",
+                  studentId: "217838",
+                  github: "https://github.com/prajita",
+                  twitter: "https://twitter.com/prajita",
                   image:
-                    "https://images.unsplash.com/photo-1544725139-0aac93c8b8e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+                    "/team/prajita.jpg",
                 },
                 {
                   name: "Ramesh Adhikari",
                   role: "Backend Developer & Database Architect",
-                  email: "217908@students.aih.edu.au",
-                  studentId: "S3456789",
-                  github: "https://github.com/alicejohnson",
-                  twitter: "https://twitter.com/alicejohnson",
+                  email: "2218067@students.aih.edu.au",
+                  studentId: "2218067",
+                  github: "https://github.com/ramesh",
+                  twitter: "https://twitter.com/ramesh",
                   image:
-                    "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+                    "/team/ramesh.jpg",
                 },
                 {
                   name: "Ashim Adhikari",
                   role: "QA Engineer & Documentation Lead",
-                  email: "217908@students.aih.edu.au",
-                  studentId: "S4567890",
-                  github: "https://github.com/bobwilliams",
-                  twitter: "https://twitter.com/bobwilliams",
+                  email: "217667@students.aih.edu.au",
+                  studentId: "217667",
+                  github: "https://github.com/ashim",
+                  twitter: "https://twitter.com/ashim",
                   image:
-                    "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+                    "/team/ashim.jpg",
                 },
               ].map((member, i) => (
                 <motion.div
@@ -873,8 +873,8 @@ export default function LandingPage() {
                     <Image
                       src={member.image}
                       alt={member.name}
-                      layout="fill"
-                      objectFit="cover"
+                      fill
+                      style={{objectFit:"cover"}}
                       className="rounded-t-lg rounded-2xl"
                     />
                   </div>

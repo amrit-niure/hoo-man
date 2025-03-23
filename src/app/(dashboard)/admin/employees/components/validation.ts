@@ -1,5 +1,5 @@
 // schemas.ts
-import { Department } from "@prisma/client";
+import { Department, EmployeeStatus } from "@prisma/client";
 import { z } from "zod";
 
 // Define the schema for employee registration
@@ -17,3 +17,23 @@ export const addEmployeeSchema = z.object({
 
 // Infer the TypeScript type from the schema
 export type IAddEmployee = z.infer<typeof addEmployeeSchema>;
+
+
+
+// components/validation.ts
+// Add this alongside your existing schemas
+
+export const updateEmployeeSchema = z.object({
+  id: z.string(),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 characters"),
+  address: z.string().min(5, "Address must be at least 5 characters"),
+  dateOfBirth: z.date(),
+  joinDate: z.date(),
+  department: z.nativeEnum(Department),
+  position: z.string().min(2, "Position must be at least 2 characters"),
+  status: z.nativeEnum(EmployeeStatus),
+});
+
+export type IUpdateEmployee = z.infer<typeof updateEmployeeSchema>;

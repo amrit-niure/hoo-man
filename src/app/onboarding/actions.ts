@@ -31,7 +31,9 @@ export const createCompanyProfile = async (data: IAddCompany) => {
                 onBoarded: true,
             },
         });
-        return response(true, "Company profile created successfully", null, "/admin");
+        const dta = response(true, "Company profile created successfully", null, "/admin");
+        console.log("Response: ", dta)
+        return dta;
     } catch (error) {
         console.error("Error creating company profile:", error);
         return response(false, "Error creating company profile", error);

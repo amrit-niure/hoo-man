@@ -1,10 +1,11 @@
 "use server"
 import { auth } from "@/lib/auth";
-import { addEmployeeSchema, IAddEmployee } from "./components/validation";
+import { addEmployeeSchema, IAddEmployee, IUpdateEmployee } from "./components/validation";
 import { signUpFormSchema } from "@/app/(auth)/admin/validation";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { requireCompany } from "@/app/utils/hooks";
+import { response } from "@/app/utils/response";
 
 const registerEmployee = async ({ name, email, password }: { name: string, email: string, password: string }) => {
     const res = await auth.api.signUpEmail({
@@ -15,6 +16,7 @@ const registerEmployee = async ({ name, email, password }: { name: string, email
             role: "USER",
         }
     })
+    revalidatePath("/admin")
     return res;
 }
 
@@ -29,7 +31,7 @@ export const addEmployee = async (data: IAddEmployee) => {
         const validateSignUpData = signUpFormSchema.parse(signUpData);
         const validateEmployeeData = addEmployeeSchema.parse(data);
 
-        const response = await registerEmployee({
+        const res = await registerEmployee({
             name: validateSignUpData.orgName,
             email: validateSignUpData.email,
             password: validateSignUpData.password,
@@ -45,16 +47,40 @@ export const addEmployee = async (data: IAddEmployee) => {
                 joinDate: validateEmployeeData.joinDate,
                 department: validateEmployeeData.department,
                 position: validateEmployeeData.position,
-                userId: response.user.id,
+                userId: res.user.id,
                 companyProfileId: company.id,
             }
         });
-        revalidatePath("/dashboard/admin")
-        return { success: true, message: "Employee added successfully" }
+        revalidatePath("/azzzzzzzzzzdmin/employees", "page")
+        return response(true, "Employee added successfully", res.user.id)
     } catch (error) {
         console.error("Error adding employee:", error);
-        return { success: false, message: "Failed to register employee " }
-
+        return response(false, "Failed to add employee", error)
     }
 
+}
+
+export async function updateEmployee(data: IUpdateEmployee) {
+    try {
+        const updated = await prisma.employee.update({
+            where: { id: data.id },
+            data: {
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                address: data.address,
+                dateOfBirth: data.dateOfBirth,
+                joinDate: data.joinDate,
+                department: data.department,
+                position: data.position,
+                status: data.status,
+            },
+        });
+
+        revalidatePath("/admin/employees");
+        return { success: true, data: updated };
+    } catch (error) {
+        console.error("Error updating employee:", error);
+        return { success: false, message: "Failed to update employee" };
+    }
 }

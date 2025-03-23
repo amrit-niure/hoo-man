@@ -100,25 +100,25 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
         },
       ],
     },
-    {
-      title: "Recruitment",
-      href: "#",
-      icon: Briefcase,
-      children: [
-        {
-          title: "Job Postings",
-          href: "/admin/recruitment/jobs",
-        },
-        {
-          title: "Applications",
-          href: "/admin/recruitment/applications",
-        },
-        {
-          title: "Onboarding",
-          href: "/admin/recruitment/onboarding",
-        },
-      ],
-    },
+    // {
+    //   title: "Recruitment",
+    //   href: "#",
+    //   icon: Briefcase,
+    //   children: [
+    //     {
+    //       title: "Job Postings",
+    //       href: "/admin/recruitment/jobs",
+    //     },
+    //     {
+    //       title: "Applications",
+    //       href: "/admin/recruitment/applications",
+    //     },
+    //     {
+    //       title: "Onboarding",
+    //       href: "/admin/recruitment/onboarding",
+    //     },
+    //   ],
+    // },
     {
       title: "Documents",
       href: "/admin/documents",

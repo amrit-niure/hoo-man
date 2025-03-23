@@ -12,22 +12,42 @@ import {
 import { Search, Plus } from "lucide-react";
 import EmployeeCard from "./employee-card";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import AddEmployeeForm from "./add-employee-form";
 import { Employee } from "@prisma/client";
+import { ViewEmployeeDialog } from "./view-employee-dialog";
+import { EditEmployeeDialog } from "./edit-employee-dialog";
 
-const EmployeeList = ({ourEmployees }: {ourEmployees : Employee[]}) => {
+const EmployeeList = ({ ourEmployees }: { ourEmployees: Employee[] }) => {
   const [employees] = useState<Employee[]>(ourEmployees);
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState<string | null>(null); // Allow null for no selection
   const [statusFilter, setStatusFilter] = useState<string | null>(null); // Allow null for no selection
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  // Update your handlers
   const handleViewEmployee = (id: string) => {
-    toast(`Viewing employee with ID: ${id}`);
+    const employee = employees.find((emp) => emp.id === id);
+    setSelectedEmployee(employee || null);
+    setViewDialogOpen(true);
   };
 
   const handleEditEmployee = (id: string) => {
-    toast(`Editing employee with ID: ${id}`);
+    const employee = employees.find((emp) => emp.id === id);
+    setSelectedEmployee(employee || null);
+    setEditDialogOpen(true);
   };
 
   const filteredEmployees = employees.filter((employee) => {
@@ -105,24 +125,24 @@ const EmployeeList = ({ourEmployees }: {ourEmployees : Employee[]}) => {
           </div>
 
           <div className="flex justify-end">
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Employee
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Employee</DialogTitle>
-              <DialogDescription>
-                Fill in the details to add a new employee.
-              </DialogDescription>
-            </DialogHeader>
-            <AddEmployeeForm onClose={() => setOpenDialog(false)} />
-          </DialogContent>
-        </Dialog>
-      </div>
+            <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Employee
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add Employee</DialogTitle>
+                  <DialogDescription>
+                    Fill in the details to add a new employee.
+                  </DialogDescription>
+                </DialogHeader>
+                <AddEmployeeForm onClose={() => setOpenDialog(false)} />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </div>
 
@@ -158,6 +178,18 @@ const EmployeeList = ({ourEmployees }: {ourEmployees : Employee[]}) => {
           </Button>
         </div>
       )}
+
+      <ViewEmployeeDialog
+        employee={selectedEmployee}
+        open={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+      />
+
+      <EditEmployeeDialog
+        employee={selectedEmployee}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+      />
     </div>
   );
 };
