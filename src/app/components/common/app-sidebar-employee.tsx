@@ -42,97 +42,38 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
 }
 
-export function AppSidebar({ className, ...props }: SidebarNavProps) {
+export function EmployeeAppSidebar({ className, ...props }: SidebarNavProps) {
   const pathname = usePathname();
 
   const routes = [
     {
       title: "Dashboard",
-      href: "/admin",
+      href: "/employee",
       icon: LayoutDashboard,
     },
     {
-      title: "Company",
-      href: "/admin/company",
-      icon: Building,
-    },
-    {
-      title: "Employees",
-      href: "/admin/employees",
-      icon: Users,
-    },
-    {
-      title: "Leave Management",
-      href: "/admin/leave",
+      title: "Leave",
+      href: "/employee/leave",
       icon: CalendarDays,
     },
     {
-      title: "Payroll",
-      href: "#",
+      title: "Payslips",
+      href: "/employee/payslips",
       icon: CreditCard,
-      children: [
-        {
-          title: "Overview",
-          href: "/admin/payroll",
-        },
-        {
-          title: "Payslips",
-          href: "/admin/payroll/payslips",
-        },
-        {
-          title: "Payments",
-          href: "/admin/payroll/payments",
-        },
-      ],
     },
     {
-      title: "Team Attendance",
-      href: "/admin/attendance/team",
+      title: "Clock in / out",
+      href: "/employee/clock-in-out",
       icon: Clock,
     },
-    // {
-    //   title: "Recruitment",
-    //   href: "#",
-    //   icon: Briefcase,
-    //   children: [
-    //     {
-    //       title: "Job Postings",
-    //       href: "/admin/recruitment/jobs",
-    //     },
-    //     {
-    //       title: "Applications",
-    //       href: "/admin/recruitment/applications",
-    //     },
-    //     {
-    //       title: "Onboarding",
-    //       href: "/admin/recruitment/onboarding",
-    //     },
-    //   ],
-    // },
     {
       title: "Documents",
       href: "/admin/documents",
       icon: FileText,
     },
-    // {
-    //   title: "Reports",
-    //   href: "/admin/reports",
-    //   icon: BarChart3,
-    // },
-    // {
-    //   title: "Compliance",
-    //   href: "/admin/compliance",
-    //   icon: FileCheck,
-    // },
-    // {
-    //   title: "Settings",
-    //   href: "/admin/settings",
-    //   icon: Settings,
-    // },
   ];
 
   return (
-
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <SidebarMenu>
@@ -161,8 +102,7 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
             <SidebarMenu>
               {routes.map((item) => {
                 const isActive =
-                  pathname === item.href || 
-                  (item.children && item.children.some((child) => pathname === child.href));
+                  pathname === item.href 
                 return (
                   <Collapsible key={item.title} asChild defaultOpen={isActive} >
                     <SidebarMenuItem>
@@ -181,37 +121,6 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
                           </Link>
                         </CollapsibleTrigger>
                       </SidebarMenuButton>
-                      {item.children?.length ? (
-                        <>
-                          <CollapsibleTrigger asChild>
-                            <SidebarMenuAction className="data-[state=open]:rotate-90">
-                              <ChevronRight />
-                              <span className="sr-only">Toggle</span>
-                            </SidebarMenuAction>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent>
-                            <SidebarMenuSub>
-                              {item.children.map((subItem) => {
-                                const isActive = pathname === subItem.href;
-                                return (
-                                  <SidebarMenuSubItem key={subItem.title}>
-                                    <SidebarMenuSubButton asChild>
-                                      <Link
-                                        href={subItem.href}
-                                        className={`rounded-md py-4 ${
-                                          isActive && "bg-primary/10"
-                                        }`}
-                                      >
-                                        <span>{subItem.title}</span>
-                                      </Link>
-                                    </SidebarMenuSubButton>
-                                  </SidebarMenuSubItem>
-                                );
-                              })}
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        </>
-                      ) : null}
                     </SidebarMenuItem>
                   </Collapsible>
                 );

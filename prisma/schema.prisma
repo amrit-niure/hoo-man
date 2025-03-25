@@ -149,12 +149,12 @@ model CompanyProfile {
 // }
 
 model Attendance {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   employeeId   String
   clockInTime  DateTime
-  clockOutTime DateTime
+  clockOutTime DateTime?
   totalHours   Float
-  employee     Employee @relation(fields: [employeeId], references: [id])
+  employee     Employee  @relation(fields: [employeeId], references: [id])
 
   @@map("attendances")
 }
@@ -181,6 +181,8 @@ model Leave {
   endDate    DateTime
   status     LeaveStatus
   employee   Employee    @relation(fields: [employeeId], references: [id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   @@map("leaves")
 }

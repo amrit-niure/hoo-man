@@ -34,12 +34,12 @@ export async function clockIn() {
       data: {
         employeeId: user.employee.id,
         clockInTime: new Date(),
-        clockOutTime: new Date(), // Temporary, will be updated on clock out
         totalHours: 0,
       },
     });
 
     revalidatePath("/attendance");
+    revalidatePath("/employee/clock-in-out");
     return response(true, "Successfully clocked in", attendance);
   } catch (error) {
     console.error("Error clocking in:", error);
@@ -84,6 +84,7 @@ export async function clockOut() {
     });
 
     revalidatePath("/attendance");
+    revalidatePath("/employee/clock-in-out");
     return response(true, "Successfully clocked out", updatedAttendance);
   } catch (error) {
     console.error("Error clocking out:", error);
