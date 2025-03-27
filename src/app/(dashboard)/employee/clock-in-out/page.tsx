@@ -2,7 +2,8 @@
 import { prisma } from "@/lib/db";
 import AttendanceDashboard from "./components/attendance-dashbaord";
 import { requireUser } from "@/app/utils/hooks";
-AttendanceDashboard
+
+
 
 async function getData() {
   const user = await requireUser();

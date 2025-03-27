@@ -100,7 +100,7 @@ export async function getAttendanceHistory(period: "day" | "week" | "month") {
     }
 
     const today = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     switch (period) {
       case "day":
@@ -142,7 +142,7 @@ export async function getCompanyAttendances(period: "day" | "week" | "month") {
     }
 
     const today = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     switch (period) {
       case "day":

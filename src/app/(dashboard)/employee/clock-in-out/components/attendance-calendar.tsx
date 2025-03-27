@@ -1,7 +1,9 @@
 "use client";
 
+import { Attendance } from "@prisma/client";
+
 interface AttendanceCalendarProps {
-  monthlyAttendance: any[];
+  monthlyAttendance: Attendance[];
 }
 
 export default function AttendanceCalendar({

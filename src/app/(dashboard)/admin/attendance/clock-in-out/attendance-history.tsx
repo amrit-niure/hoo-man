@@ -1,29 +1,31 @@
 "use client"
+
+import { useEffect, useState } from "react";
+import { getAttendanceHistory } from "../actions";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
+import { Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { toast } from "sonner";
+import { Attendance } from "@prisma/client";
+
 export function AttendanceHistory() {
     const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
-    const [attendances, setAttendances] = useState<any[]>([]);
+    const [attendances, setAttendances] = useState<Attendance[]>([]);
     const [loading, setLoading] = useState(false);
   
     const fetchAttendanceHistory = async (period: "day" | "week" | "month") => {
       try {
         setLoading(true);
         const result = await getAttendanceHistory(period);
-        if (result.success) {
+        if (result.success && Array.isArray(result.data)) {
           setAttendances(result.data);
         } else {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: result.message,
-          });
+          toast("Error fetching attendance history"); 
         }
       } catch (error) {
         console.error("Failed to fetch attendance history:", error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to fetch attendance history",
-        });
+        toast("Error fetching attendance history");
       } finally {
         setLoading(false);
       }
@@ -72,7 +74,7 @@ export function AttendanceHistory() {
                             "hh:mm a"
                           )}
                         </p>
-                        {attendance.clockOutTime !== attendance.clockInTime && (
+                        {attendance.clockOutTime && attendance.clockOutTime !== attendance.clockInTime && (
                           <p className="text-sm text-muted-foreground">
                             Clock Out: {format(
                               new Date(attendance.clockOutTime),

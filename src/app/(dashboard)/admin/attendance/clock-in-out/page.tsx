@@ -240,6 +240,7 @@ import { Clock, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { clockIn, clockOut, getAttendanceHistory } from "../actions";
 import { toast } from "sonner";
+import { Attendance } from "@prisma/client";
 
 export default function AttendancePage() {
   return (
@@ -258,9 +259,9 @@ export default function AttendancePage() {
   );
 }
 
-export function ClockInOutCard() {
+ function ClockInOutCard() {
   const [loading, setLoading] = useState(false);
-  const [recentAttendances, setRecentAttendances] = useState<any[]>([]);
+  const [recentAttendances, setRecentAttendances] = useState<Attendance[]>([]);
 
   const handleClockIn = async () => {
     try {
@@ -277,6 +278,7 @@ export function ClockInOutCard() {
         fetchRecentAttendances();
       }
     } catch (error) {
+      console.log(error)
       toast("Error clocking in");
     } finally {
       setLoading(false);
@@ -302,6 +304,7 @@ export function ClockInOutCard() {
         fetchRecentAttendances();
       }
     } catch (error) {
+      console.log(error)
       toast("Error clocking out");
     } finally {
       setLoading(false);
@@ -395,7 +398,7 @@ export function ClockInOutCard() {
 }
 
 // app/attendance/components/calendar-card.tsx
-export function CalendarCard() {
+ function CalendarCard() {
   const [date, setDate] = useState<Date>(new Date());
 
   return (
@@ -416,9 +419,9 @@ export function CalendarCard() {
 }
 
 // app/attendance/components/attendance-history.tsx
-export function AttendanceHistory() {
+ function AttendanceHistory() {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
-  const [attendances, setAttendances] = useState<any[]>([]);
+  const [attendances, setAttendances] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchAttendanceHistory = async (period: "day" | "week" | "month") => {
@@ -483,10 +486,10 @@ export function AttendanceHistory() {
                       </p>
                       {attendance.clockOutTime !== attendance.clockInTime && (
                         <p className="text-sm text-muted-foreground">
-                          Clock Out: {format(
+                          Clock Out: {attendance.clockOutTime ? format(
                             new Date(attendance.clockOutTime),
                             "hh:mm a"
-                          )}
+                          ) : 'Not clocked out'}
                         </p>
                       )}
                     </div>

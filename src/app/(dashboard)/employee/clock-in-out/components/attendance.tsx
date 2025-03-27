@@ -3,13 +3,14 @@ import { useState } from "react";
 import { clockIn, clockOut } from "../../actions";
 
 interface AttendanceActionsProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentAttendance: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: any;
 }
 
 export default function AttendanceActions({
-  currentAttendance: initialCurrentAttendance,
-  user,
+  currentAttendance: initialCurrentAttendance
 }: AttendanceActionsProps) {
   const [currentAttendance, setCurrentAttendance] = useState(
     initialCurrentAttendance
@@ -28,6 +29,7 @@ export default function AttendanceActions({
         setError(result.message);
       }
     } catch (err) {
+      console.log(err)
       setError("Failed to clock in");
     } finally {
       setIsLoading(false);
@@ -45,6 +47,7 @@ export default function AttendanceActions({
         setError(result.message);
       }
     } catch (err) {
+      console.log(err)
       setError("Failed to clock out");
     } finally {
       setIsLoading(false);

@@ -4,19 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
-  BarChart3,
   CalendarDays,
   Clock,
   CreditCard,
   FileText,
  LayoutDashboard,
-  Settings,
-  Users,
-  Briefcase,
-  FileCheck,
-  Building,
   Command,
-  ChevronRight,
 } from "lucide-react";
 import {
   Sidebar,
@@ -25,16 +18,11 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
-  CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 

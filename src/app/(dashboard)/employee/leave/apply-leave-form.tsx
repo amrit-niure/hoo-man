@@ -45,6 +45,7 @@ export function ApplyLeaveForm({ employeeId }: { employeeId: string }) {
       toast.success("Leave request submitted successfully");
       form.reset();
     } catch (error) {
+      console.log(error)
       toast.error("Failed to submit leave request");
     }
   }

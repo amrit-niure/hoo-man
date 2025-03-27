@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { clockIn, clockOut, getAttendanceHistory } from "../../actions";
-import { Attendance, User } from "@prisma/client";
+import { Attendance } from "@prisma/client";
 
 interface AttendanceDashboardProps {
   initialData: {
@@ -100,6 +100,7 @@ function ClockInOutCard({
         });
       }
     } catch (error) {
+      console.error(error);
       toast.error("Error clocking in");
     } finally {
       setLoading(null);
@@ -125,6 +126,7 @@ function ClockInOutCard({
         });
       }
     } catch (error) {
+      console.error(error);
       toast.error("Error clocking out");
     } finally {
       setLoading(null);
@@ -260,9 +262,10 @@ function ClockInOutCard({
 function CalendarCard({
   monthlyAttendances: initialMonthlyAttendances,
 }: {
-  monthlyAttendances: any[];
+  monthlyAttendances: Attendance[];
 }) {
   const [date, setDate] = useState<Date>(new Date());
+  // eslint-disable-next-line 
   const [attendanceDates, setAttendanceDates] = useState<Date[]>(
     initialMonthlyAttendances.map((a) => new Date(a.clockInTime))
   );
@@ -300,7 +303,7 @@ function CalendarCard({
 function AttendanceHistory({
   initialAttendances,
 }: {
-  initialAttendances: any[];
+  initialAttendances: Attendance[];
 }) {
   const [activeTab, setActiveTab] = useState<"day" | "week" | "month">("day");
   const [attendances, setAttendances] = useState(initialAttendances);
@@ -311,11 +314,13 @@ function AttendanceHistory({
       setLoading(true);
       const result = await getAttendanceHistory(period);
       if (result.success) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setAttendances((result?.data as any[]) ?? []);
       } else {
         toast.error(result.message || "Error fetching attendance history");
       }
     } catch (error) {
+      console.log(error)
       toast.error("Failed to fetch attendance history");
     } finally {
       setLoading(false);

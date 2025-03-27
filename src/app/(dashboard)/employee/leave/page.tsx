@@ -1,5 +1,4 @@
-// app/employee/leaves/page.tsx (Server Component)
-import { Leave, LeaveStatus, LeaveType, Employee } from "@prisma/client";
+
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { prisma } from "@/lib/db";

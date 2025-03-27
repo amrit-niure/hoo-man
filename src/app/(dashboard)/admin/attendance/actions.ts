@@ -99,6 +99,7 @@ export async function getAttendanceHistory(period: "day" | "week" | "month") {
     }
 
     const today = new Date();
+        // eslint-disable-next-line 
     let startDate = new Date();
 
     switch (period) {
@@ -108,10 +109,11 @@ export async function getAttendanceHistory(period: "day" | "week" | "month") {
       case "week":
         startDate.setDate(today.getDate() - 7);
         break;
-      case "month":
+      case "month": 
         startDate.setMonth(today.getMonth() - 1);
         break;
     }
+
 
     const attendances = await prisma.attendance.findMany({
       where: {
@@ -141,7 +143,7 @@ export async function getCompanyAttendances(period: "day" | "week" | "month") {
     }
 
     const today = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     switch (period) {
       case "day":

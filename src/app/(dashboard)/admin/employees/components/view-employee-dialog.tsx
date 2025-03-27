@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Mail, Phone, Calendar, Building2, MapPin } from "lucide-react";
+import Image from "next/image";
 
 interface ViewEmployeeDialogProps {
   employee: Employee | null;
@@ -30,7 +31,9 @@ export function ViewEmployeeDialog({
           <div className="flex items-center justify-center">
             <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-medium">
               {employee.avatar ? (
-                <img
+                <Image
+                  width={96}
+                  height={96}
                   src={employee.avatar}
                   alt={employee.name}
                   className="h-full w-full rounded-full object-cover"

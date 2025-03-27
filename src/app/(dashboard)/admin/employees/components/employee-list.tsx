@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import { Search, Plus } from "lucide-react";
 import EmployeeCard from "./employee-card";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,

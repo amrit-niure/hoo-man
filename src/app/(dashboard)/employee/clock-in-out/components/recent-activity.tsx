@@ -1,7 +1,9 @@
 "use client";
 
+import { Attendance } from "@prisma/client";
+
 interface RecentActivityProps {
-  recentAttendance: any[];
+  recentAttendance: Attendance[];
 }
 
 export default function RecentActivity({ recentAttendance }: RecentActivityProps) {
