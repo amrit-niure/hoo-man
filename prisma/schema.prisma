@@ -24,6 +24,7 @@ model User {
   company          CompanyProfile?
   employee         Employee?
   companyProfileId String?
+  PayrollRun       PayrollRun[]
 
   @@unique([email])
   @@map("user")
@@ -93,28 +94,140 @@ model Employee {
   leaveRequests    Leave[]
   CompanyProfile   CompanyProfile? @relation(fields: [companyProfileId], references: [id])
   companyProfileId String?
+  bankDetails      BankDetail[]
+  taxInformation   TaxInformation?
+  superannuation   Superannuation?
 
   @@map("employees")
 }
 
+model Payslip {
+  id              String        @id @default(uuid())
+  employeeId      String
+  payPeriodStart  DateTime
+  payPeriodEnd    DateTime
+  grossAmount     Float
+  netAmount       Float
+  deductions      Float
+  taxAmount       Float
+  superAmount     Float
+  leaveDeductions Float
+  hourlyRate      Float
+  hoursWorked     Float
+  paymentDate     DateTime
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus @default(PENDING)
+  stripePaymentId String?
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  employee        Employee      @relation(fields: [employeeId], references: [id])
+  payrollRun      PayrollRun?   @relation(fields: [payrollRunId], references: [id])
+  payrollRunId    String?
+
+  @@map("payslips")
+}
+
+model PayrollRun {
+  id               String         @id @default(uuid())
+  name             String
+  description      String?
+  payPeriodStart   DateTime
+  payPeriodEnd     DateTime
+  totalGross       Float
+  totalNet         Float
+  totalTax         Float
+  totalSuper       Float
+  status           PayrollStatus  @default(DRAFT)
+  processedAt      DateTime?
+  processedById    String
+  processedBy      User           @relation(fields: [processedById], references: [id])
+  companyProfileId String
+  companyProfile   CompanyProfile @relation(fields: [companyProfileId], references: [id])
+  payslips         Payslip[]
+  stripeBatchId    String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@map("payroll_runs")
+}
+
+model BankDetail {
+  id            String   @id @default(uuid())
+  employeeId    String
+  bankName      String
+  accountName   String
+  bsbNumber     String
+  accountNumber String
+  isPrimary     Boolean  @default(true)
+  employee      Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("bank_details")
+}
+
+model TaxInformation {
+  id                  String   @id @default(uuid())
+  employeeId          String   @unique
+  taxFileNumber       String?
+  taxScale            String?
+  hasTaxFreeThreshold Boolean  @default(false)
+  hasSeniorsOffset    Boolean  @default(false)
+  hasStudentLoan      Boolean  @default(false)
+  employee            Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("tax_information")
+}
+
+model Superannuation {
+  id               String   @id @default(uuid())
+  employeeId       String   @unique
+  fundName         String
+  memberNumber     String
+  productId        String?
+  contributionRate Float    @default(0.11)
+  employee         Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("superannuation")
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  CASH
+  CHEQUE
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSED
+  FAILED
+}
+
+enum PayrollStatus {
+  DRAFT
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model CompanyProfile {
-  id             String     @id @default(uuid())
+  id             String       @id @default(uuid())
   companyName    String
   logo           String?
   address        String
   phone          String
-  email          String     @unique
+  email          String       @unique
   website        String?
   taxNumber      String?
   registrationNo String?
   description    String?
   industry       String?
   foundedDate    DateTime?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  User           User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId         String?    @unique
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  User           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId         String?      @unique
   employees      Employee[]
+  PayrollRun     PayrollRun[]
 
   @@map("company_profile")
 }
@@ -128,20 +241,6 @@ model Attendance {
   employee     Employee  @relation(fields: [employeeId], references: [id])
 
   @@map("attendances")
-}
-
-model Payslip {
-  id             String   @id @default(uuid())
-  employeeId     String
-  payPeriodStart DateTime
-  payPeriodEnd   DateTime
-  grossAmount    Float
-  netAmount      Float
-  deductions     Float
-  createdAt      DateTime @default(now())
-  employee       Employee @relation(fields: [employeeId], references: [id])
-
-  @@map("payslips")
 }
 
 model Leave {
