@@ -48,11 +48,6 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
       icon: LayoutDashboard,
     },
     {
-      title: "Company",
-      href: "/admin/company",
-      icon: Building,
-    },
-    {
       title: "Employees",
       href: "/admin/employees",
       icon: Users,
