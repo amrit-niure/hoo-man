@@ -51,7 +51,7 @@ export const addEmployee = async (data: IAddEmployee) => {
                 companyProfileId: company.id,
             }
         });
-        revalidatePath("/azzzzzzzzzzdmin/employees", "page")
+        revalidatePath("/admin/employees", "page")
         return response(true, "Employee added successfully", res.user.id)
     } catch (error) {
         console.error("Error adding employee:", error);

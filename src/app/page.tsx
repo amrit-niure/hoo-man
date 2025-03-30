@@ -843,8 +843,8 @@ export default function LandingPage() {
                 {
                   name: "Ramesh Adhikari",
                   role: "Backend Developer & Database Architect",
-                  email: "2218067@students.aih.edu.au",
-                  studentId: "2218067",
+                  email: "221860@students.aih.edu.au",
+                  studentId: "221860",
                   github: "https://github.com/ramesh",
                   twitter: "https://twitter.com/ramesh",
                   image:

@@ -72,12 +72,12 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
           href: "/admin/payroll",
         },
         {
-          title: "Payslips",
-          href: "/admin/payroll/payslips",
+          title: "Run Payroll",
+          href: "/admin/payroll/run",
         },
         {
-          title: "Payments",
-          href: "/admin/payroll/payments",
+          title: "History",
+          href: "/admin/payroll/history",
         },
       ],
     },
