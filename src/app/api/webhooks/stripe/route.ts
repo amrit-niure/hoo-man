@@ -1,3 +1,4 @@
+// app/api/webhooks/stripe/route.ts
 import { prisma as db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { headers } from "next/headers";
@@ -6,13 +7,15 @@ import Stripe from "stripe";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const header = await headers()
-
-    const signature = header.get("Stripe-Signature") || header.get("stripe-signature");
+  const headerList = headers();
+  const signature = headerList.get("Stripe-Signature") || headerList.get("stripe-signature");
 
   if (!signature) {
-    console.error("Missing Stripe signature");
-    return new NextResponse("Missing Stripe signature", { status: 400 });
+    console.error("⚠️ Missing Stripe signature header");
+    return NextResponse.json(
+      { error: "Missing Stripe signature" },
+      { status: 400 }
+    );
   }
 
   let event: Stripe.Event;
@@ -24,44 +27,108 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (error: any) {
-    console.error(`Webhook signature verification failed: ${error.message}`);
-    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+    console.error(`❌ Webhook signature verification failed:`, error.message);
+    return NextResponse.json(
+      { error: `Webhook Error: ${error.message}` },
+      { status: 400 }
+    );
   }
 
-  // Handle different event types
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      // Handle successful payment
-      break;
-    case 'transfer.created':
-      // Handle transfer creation
-      break;
-    case 'transfer.updated':
-      // Handle successful transfer to employee bank account
-      const transfer = event.data.object as Stripe.Transfer;
-      await handleSuccessfulTransfer(transfer);
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
+  console.log(`🔔 Received Stripe event: ${event.type}`);
 
-  return new NextResponse(null, { status: 200 });
+  try {
+    switch (event.type) {
+      // Handle bank account verification
+      case "account.external_account.updated": {
+        const account = event.data.object as Stripe.BankAccount;
+        if (account.status === "verified") {
+          await db.bankDetail.updateMany({
+            where: { stripeBankToken: account.id },
+            data: { verified: true }
+          });
+          console.log(`✅ Verified bank account: ${account.id}`);
+        }
+        break;
+      }
+
+      // Handle successful transfers
+      case "transfer.updated": {
+        const transfer = event.data.object as Stripe.Transfer;
+        await handleSuccessfulTransfer(transfer);
+        console.log(`✅ Processed transfer: ${transfer.id}`);
+        break;
+      }
+
+      // Handle failed transfers
+      // case "transfer.failed": {
+      //   const transfer = event.data.object as Stripe.Transfer;
+      //   await handleFailedTransfer(transfer);
+      //   console.log(`❌ Failed transfer: ${transfer.id}`);
+      //   break;
+      // }
+
+      default: {
+        console.log(`➖ Unhandled event type: ${event.type}`);
+      }
+    }
+
+    return NextResponse.json({ received: true }, { status: 200 });
+  } catch (error) {
+    console.error("⚠️ Webhook handler failed:", error);
+    return NextResponse.json(
+      { error: "Webhook handler failed" },
+      { status: 500 }
+    );
+  }
 }
 
 async function handleSuccessfulTransfer(transfer: Stripe.Transfer) {
   try {
-    // Update payslip status in database
-    await db.payslip.updateMany({
-      where: {
-        stripePaymentId: transfer.id,
-      },
-      data: {
-        paymentStatus: "PROCESSED",
-        paymentDate: new Date(),
-      },
-    });
+    await db.$transaction([
+      db.payslip.updateMany({
+        where: { stripePaymentId: transfer.id },
+        data: {
+          paymentStatus: "PROCESSED",
+          paymentDate: new Date(),
+          metadata: {
+            ...transfer.metadata,
+            stripeStatus: transfer.status,
+            stripeReceiptUrl: transfer.receipt_url
+          }
+        }
+      }),
+      db.payrollRun.updateMany({
+        where: { stripeBatchId: transfer.transfer_group },
+        data: { status: "COMPLETED" }
+      })
+    ]);
   } catch (error) {
-    console.error('Error updating payslip status:', error);
+    console.error("Failed to update successful transfer:", error);
+    throw error;
+  }
+}
+
+async function handleFailedTransfer(transfer: Stripe.Transfer) {
+  try {
+    await db.$transaction([
+      db.payslip.updateMany({
+        where: { stripePaymentId: transfer.id },
+        data: {
+          paymentStatus: "FAILED",
+          metadata: {
+            ...transfer.metadata,
+            stripeStatus: transfer.status,
+            failureMessage: transfer.failure_message
+          }
+        }
+      }),
+      db.payrollRun.updateMany({
+        where: { stripeBatchId: transfer.transfer_group },
+        data: { status: "FAILED" }
+      })
+    ]);
+  } catch (error) {
+    console.error("Failed to update failed transfer:", error);
     throw error;
   }
 }

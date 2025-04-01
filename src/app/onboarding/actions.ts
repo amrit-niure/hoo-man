@@ -17,7 +17,7 @@ export const createCompanyProfile = async (data: IAddCompany) => {
             redirect("/signin");
         }
         const validatedData = addCompanySchema.parse(data);
-        await prisma.companyProfile.create({
+       const company =  await prisma.companyProfile.create({
             data: {
                 ...validatedData,
                 userId: session.user.id,
@@ -29,6 +29,7 @@ export const createCompanyProfile = async (data: IAddCompany) => {
             },
             data: {
                 onBoarded: true,
+                companyProfileId: company.id,
             },
         });
         const dta = response(true, "Company profile created successfully", null, "/admin");

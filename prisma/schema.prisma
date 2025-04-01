@@ -124,6 +124,7 @@ model Payslip {
   employee        Employee      @relation(fields: [employeeId], references: [id])
   payrollRun      PayrollRun?   @relation(fields: [payrollRunId], references: [id])
   payrollRunId    String?
+  metadata        Json?
 
   @@map("payslips")
 }
@@ -153,14 +154,16 @@ model PayrollRun {
 }
 
 model BankDetail {
-  id            String   @id @default(uuid())
-  employeeId    String
-  bankName      String
-  accountName   String
-  bsbNumber     String
-  accountNumber String
-  isPrimary     Boolean  @default(true)
-  employee      Employee @relation(fields: [employeeId], references: [id])
+  id              String   @id @default(uuid())
+  employeeId      String
+  bankName        String
+  accountName     String
+  bsbNumber       String
+  accountNumber   String
+  isPrimary       Boolean  @default(true)
+  employee        Employee @relation(fields: [employeeId], references: [id])
+  stripeBankToken String?
+  verified        Boolean  @default(false)
 
   @@map("bank_details")
 }
@@ -204,6 +207,7 @@ enum PaymentStatus {
 
 enum PayrollStatus {
   DRAFT
+  READY_FOR_PROCESSING
   PROCESSING
   COMPLETED
   FAILED

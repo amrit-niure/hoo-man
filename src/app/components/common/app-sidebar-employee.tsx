@@ -50,8 +50,13 @@ export function EmployeeAppSidebar({ className, ...props }: SidebarNavProps) {
       icon: CreditCard,
     },
     {
-      title: "Clock in / out",
+      title: "Attendance",
       href: "/employee/clock-in-out",
+      icon: Clock,
+    },
+    {
+      title: "Bank Details",
+      href: "/employee/bank-details",
       icon: Clock,
     },
     {

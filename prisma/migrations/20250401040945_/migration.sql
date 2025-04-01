@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PayrollStatus" ADD VALUE 'READY_FOR_PROCESSING';

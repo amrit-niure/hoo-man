@@ -64,15 +64,11 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
       children: [
         {
           title: "Overview",
-          href: "/admin/payroll",
+          href: "/admin/new/payroll",
         },
         {
-          title: "Run Payroll",
-          href: "/admin/payroll/run",
-        },
-        {
-          title: "History",
-          href: "/admin/payroll/history",
+          title: "Payslips",
+          href: "/admin/new/payroll/payslip",
         },
       ],
     },
