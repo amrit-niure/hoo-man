@@ -18,7 +18,9 @@ export default function AdminLayout({
     <AppSidebar/>
     <SidebarInset>
       <TopNav />
-      <main className="p-8">{children}</main>
+      <main className="p-8">{children}
+
+      </main>
     </SidebarInset>
   </SidebarProvider>
   );

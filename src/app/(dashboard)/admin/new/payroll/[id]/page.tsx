@@ -92,11 +92,11 @@ export default async function PayrollRunPage({ params }: { params: Promise<{ id:
           }))} 
         />
       </div>
-      {payrollRun.status === "READY_FOR_PROCESSING" && (
+      {/* {payrollRun.status === "READY_FOR_PROCESSING" && (
       <div className="mt-8 p-4 bg-muted rounded-lg">
         <ProcessPayrollButton payrollRunId={payrollRun.id} />
       </div>
-    )}
+    )} */}
     </div>
   );
 }

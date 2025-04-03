@@ -97,6 +97,7 @@ model Employee {
   bankDetails      BankDetail[]
   taxInformation   TaxInformation?
   superannuation   Superannuation?
+  documents        String[]
 
   @@map("employees")
 }
@@ -226,6 +227,7 @@ model CompanyProfile {
   description    String?
   industry       String?
   foundedDate    DateTime?
+  documents      String[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   User           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)

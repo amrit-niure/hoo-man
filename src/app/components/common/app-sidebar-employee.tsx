@@ -61,7 +61,7 @@ export function EmployeeAppSidebar({ className, ...props }: SidebarNavProps) {
     },
     {
       title: "Documents",
-      href: "/admin/documents",
+      href: "/employee/documents",
       icon: FileText,
     },
   ];

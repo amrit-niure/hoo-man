@@ -59,18 +59,8 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
     },
     {
       title: "Payroll",
-      href: "#",
+      href: "/admin/new/payroll",
       icon: CreditCard,
-      children: [
-        {
-          title: "Overview",
-          href: "/admin/new/payroll",
-        },
-        {
-          title: "Payslips",
-          href: "/admin/new/payroll/payslip",
-        },
-      ],
     },
     {
       title: "Team Attendance",
@@ -148,8 +138,7 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
             <SidebarMenu>
               {routes.map((item) => {
                 const isActive =
-                  pathname === item.href || 
-                  (item.children && item.children.some((child) => pathname === child.href));
+                  pathname === item.href 
                 return (
                   <Collapsible key={item.title} asChild defaultOpen={isActive} >
                     <SidebarMenuItem>
@@ -168,7 +157,7 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
                           </Link>
                         </CollapsibleTrigger>
                       </SidebarMenuButton>
-                      {item.children?.length ? (
+                      {/* {item.children?.length ? (
                         <>
                           <CollapsibleTrigger asChild>
                             <SidebarMenuAction className="data-[state=open]:rotate-90">
@@ -198,7 +187,7 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
                             </SidebarMenuSub>
                           </CollapsibleContent>
                         </>
-                      ) : null}
+                      ) : null} */}
                     </SidebarMenuItem>
                   </Collapsible>
                 );
