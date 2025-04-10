@@ -10,9 +10,7 @@ import {
   FileText,
  LayoutDashboard,
   Users,
-  Building,
   Command,
-  ChevronRight,
 } from "lucide-react";
 import {
   Sidebar,
@@ -21,16 +19,11 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
-  CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 

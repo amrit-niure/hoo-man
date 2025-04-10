@@ -39,7 +39,7 @@ export async function generatePayslipPDF(payslip: Payslip & { employee: { name: 
 
   // Footer
   doc.setFontSize(10);
-  doc.text("Thank you for your hard work!", 105, 180, { align: "center" });
+  doc.text("Thank You", 105, 180, { align: "center" });
 
   return doc.output("blob");
 }

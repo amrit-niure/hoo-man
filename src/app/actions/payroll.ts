@@ -2,9 +2,7 @@
 
 import { getCurrentUser } from "@/lib/current-user";
 import {  prisma as db } from "@/lib/db";
-import { stripe } from "@/lib/stripe";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 
 // Create a new payroll run
@@ -71,25 +69,25 @@ export async function processPayrollRun(payrollRunId: string) {
 
   try {
     // Create Stripe batch transfer
-    const transferGroup = `payroll_${payrollRunId}`;
-    const transfers = payrollRun.payslips.map((payslip: any) => ({
-      amount: Math.round(payslip.netAmount * 100), // Convert to cents
-      currency: "aud",
-      destination: payslip.employee.bankDetails[0]?.accountNumber, // Use primary bank account
-      metadata: {
-        payslipId: payslip.id,
-        employeeId: payslip.employeeId,
-        payrollRunId: payrollRunId,
-      },
-      transfer_group: transferGroup,
-    }));
+    // const transferGroup = `payroll_${payrollRunId}`;
+    // const transfers = payrollRun.payslips.map((payslip: any) => ({
+    //   amount: Math.round(payslip.netAmount * 100), // Convert to cents
+    //   currency: "aud",
+    //   destination: payslip.employee.bankDetails[0]?.accountNumber, // Use primary bank account
+    //   metadata: {
+    //     payslipId: payslip.id,
+    //     employeeId: payslip.employeeId,
+    //     payrollRunId: payrollRunId,
+    //   },
+    //   transfer_group: transferGroup,
+    // }));
 
     // Process payments via Stripe
-    const transferResults = await Promise.all(
-      transfers.map(async (transfer) => {
-        return await stripe.transfers.create(transfer);
-      })
-    );
+    // const transferResults = await Promise.all(
+    //   transfers.map(async (transfer) => {
+    //     return await stripe.transfers.create(transfer);
+    //   })
+    // );
 
     // Update payroll run and mark as completed
     await db.payrollRun.update({

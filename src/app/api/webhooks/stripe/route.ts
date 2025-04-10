@@ -7,7 +7,7 @@ import Stripe from "stripe";
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const headerList = headers();
+  const headerList = await headers();
   const signature = headerList.get("Stripe-Signature") || headerList.get("stripe-signature");
 
   if (!signature) {
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error(`❌ Webhook signature verification failed:`, error.message);
     return NextResponse.json(
@@ -92,8 +93,8 @@ async function handleSuccessfulTransfer(transfer: Stripe.Transfer) {
           paymentDate: new Date(),
           metadata: {
             ...transfer.metadata,
-            stripeStatus: transfer.status,
-            stripeReceiptUrl: transfer.receipt_url
+            // stripeStatus: transfer.status,
+            // stripeReceiptUrl: transfer.receipt_url
           }
         }
       }),
@@ -108,27 +109,27 @@ async function handleSuccessfulTransfer(transfer: Stripe.Transfer) {
   }
 }
 
-async function handleFailedTransfer(transfer: Stripe.Transfer) {
-  try {
-    await db.$transaction([
-      db.payslip.updateMany({
-        where: { stripePaymentId: transfer.id },
-        data: {
-          paymentStatus: "FAILED",
-          metadata: {
-            ...transfer.metadata,
-            stripeStatus: transfer.status,
-            failureMessage: transfer.failure_message
-          }
-        }
-      }),
-      db.payrollRun.updateMany({
-        where: { stripeBatchId: transfer.transfer_group },
-        data: { status: "FAILED" }
-      })
-    ]);
-  } catch (error) {
-    console.error("Failed to update failed transfer:", error);
-    throw error;
-  }
-}
+// async function handleFailedTransfer(transfer: Stripe.Transfer) {
+//   try {
+//     await db.$transaction([
+//       db.payslip.updateMany({
+//         where: { stripePaymentId: transfer.id },
+//         data: {
+//           paymentStatus: "FAILED",
+//           metadata: {
+//             ...transfer.metadata,
+//             stripeStatus: transfer.status,
+//             failureMessage: transfer.failure_message
+//           }
+//         }
+//       }),
+//       db.payrollRun.updateMany({
+//         where: { stripeBatchId: transfer.transfer_group },
+//         data: { status: "FAILED" }
+//       })
+//     ]);
+//   } catch (error) {
+//     console.error("Failed to update failed transfer:", error);
+//     throw error;
+//   }
+// }

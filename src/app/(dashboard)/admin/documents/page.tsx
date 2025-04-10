@@ -13,36 +13,24 @@ import { UploadDropzone } from "@/lib/uploadthing"
 import { deleteCompanyDocument, getCompanyDocuments, updateCompanyDocuments } from "./actions"
 import { toast } from "sonner"
 
-function DeleteButton() {
-  const { pending } = useFormStatus()
-  return (
-    <Button 
-      type="submit" 
-      variant="ghost" 
-      size="sm" 
-      className="text-red-500"
-      disabled={pending}
-    >
-      {pending ? "Deleting..." : "Delete"}
-    </Button>
-  )
-}
-
-// Mock data for demonstration
-const documents = [
-  {
-    id: "1",
-    name: "Company Policy.pdf",
-    uploadedBy: "Admin",
-    uploadedAt: "2023-10-15",
-    size: "1.2 MB",
-    type: "pdf",
-  },
-  // ... other mock documents
-]
+// function DeleteButton() {
+//   const { pending } = useFormStatus()
+//   return (
+//     <Button 
+//       type="submit" 
+//       variant="ghost" 
+//       size="sm" 
+//       className="text-red-500"
+//       disabled={pending}
+//     >
+//       {pending ? "Deleting..." : "Delete"}
+//     </Button>
+//   )
+// }
 
 function SubmitButton() {
   const { pending, data } = useFormStatus()
+  console.log(data)
   return (
     <Button type="submit" disabled={pending} className="mt-4">
       {pending ? "Saving..." : "Save Documents"}
@@ -52,8 +40,10 @@ function SubmitButton() {
 
 
 export default function CompanyDocumentsPage() {
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
   const [searchQuery, setSearchQuery] = useState("")
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [documents, setDocuments] = useState<any[]>([]) // Now managed via state
   const [state, formAction] = useActionState(updateCompanyDocuments, { success: false, message: "" })
 

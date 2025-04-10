@@ -7,10 +7,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ArrowLeft, Download, Printer } from "lucide-react"
-
-export default function PayslipDetailPage({ params }: { params: { id: string } }) {
+import { useParams } from 'next/navigation'
+export default  function PayslipDetailPage() {
   const [isLoading, setIsLoading] = useState(false)
-
+  const params = useParams<{ id: string;}>()
   // Mock data for a single payslip
   const payslip = {
     id: params.id,

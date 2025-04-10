@@ -13,7 +13,7 @@ export const ourFileRouter = {
     video: { maxFileSize: "16MB" },
   })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
       const user = { id: "1", role: "admin" }
 

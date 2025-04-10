@@ -3,6 +3,7 @@
 import { getCurrentUser } from "@/lib/current-user"
 import { prisma } from "@/lib/db"
 
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateCompanyDocuments(prevState: any, formData: FormData) {
   try {
     const user = await getCurrentUser()
@@ -85,5 +86,28 @@ export async function deleteCompanyDocument(documentUrl: string) {
   } catch (error) {
     console.error("Error deleting company document:", error)
     return { success: false, message: "Failed to delete document" }
+  }
+}
+
+// Get all documents for the current company
+export async function getEmployeeDocuments() {
+  try {
+    const user = await getCurrentUser()
+    if (!user || !user.role || user.role !== "USER") {
+      return { success: false, message: "Unauthorized", documents: [] }
+    }
+
+    const employee = await prisma.employee.findUnique({
+      where: { userId: user.id },
+      select: { documents: true }
+    })
+
+    return { 
+      success: true, 
+      documents: employee?.documents || [] 
+    }
+  } catch (error) {
+    console.error("Error fetching employee documents:", error)
+    return { success: false, message: "Failed to fetch documents", documents: [] }
   }
 }

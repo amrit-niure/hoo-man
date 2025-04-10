@@ -44,6 +44,7 @@ function CheckoutForm() {
       setIsSuccess(true)
       setMessage("Payment successful! Your payroll has been processed.")
     } catch (error) {
+      console.error("Payment error:", error)
       setMessage("An unexpected error occurred.")
     } finally {
       setIsProcessing(false)

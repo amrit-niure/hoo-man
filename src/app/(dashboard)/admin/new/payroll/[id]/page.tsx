@@ -4,7 +4,6 @@ import { generatePayslips } from "@/app/actions/payroll";
 import { getCurrentUser } from "@/lib/current-user";
 import { PayrollRunHeader } from "../components/payroll-run-header";
 import { PayslipTable } from "../components/payslip-table";
-import { ProcessPayrollButton } from "../components/process-payroll-button";
 import { processPayroll } from "../actions";
 
 export default async function PayrollRunPage({ params }: { params: Promise<{ id: string }> }) {
