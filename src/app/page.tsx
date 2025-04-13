@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "next-themes";
+import { DemoBookingModal } from "@/components/demo-booking-modal";
 
 
 export default function LandingPage() {
@@ -287,17 +288,15 @@ export default function LandingPage() {
                 processing, and attendance tracking. Boost productivity and
                 efficiency across your organization.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
                   href={"#pricing"}
-                  className={buttonVariants({ size: "lg" })}
+                  className={buttonVariants()}
                 >
                   Start Free Trial
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
-                <Button size="lg" variant="outline">
-                  Book a Demo
-                </Button>
+                <DemoBookingModal />
               </div>
               <div className="flex items-center justify-center gap-4 mt-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">

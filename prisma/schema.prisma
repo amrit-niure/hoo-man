@@ -297,3 +297,28 @@ enum EmployeeStatus {
   RESIGNED
   ON_LEAVE
 }
+
+model DemoBooking {
+  id            String        @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String        @unique
+  companyName   String?
+  phoneNumber   String?
+  preferredDate DateTime
+  status        BookingStatus @default(PENDING)
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([email])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  RESCHEDULED
+}
