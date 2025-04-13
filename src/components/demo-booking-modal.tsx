@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 
@@ -23,26 +22,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
+import { bookDemo } from "@/app/actions"
+import { toast } from "sonner"
+import { demoFormSchema, DemoFormValues } from "@/app/validation"
 
-export const demoFormSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "First name must be at least 2 characters.",
-  }),
-  lastName: z.string().min(2, {
-    message: "Last name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  companyName: z.string().optional(),
-  phoneNumber: z.string().optional(),
-  preferredDate: z.date({
-    required_error: "Please select a date and time for your demo.",
-  }),
-  notes: z.string().optional(),
-})
-
-export type DemoFormValues = z.infer<typeof demoFormSchema>
 
 export function DemoBookingModal() {
   const [open, setOpen] = useState(false)
@@ -64,20 +47,31 @@ export function DemoBookingModal() {
     setIsSubmitting(true)
 
     try {
-      // Here you would typically send the data to your API
-      console.log(data)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Success - close the modal and reset the form
-      setOpen(false)
-      form.reset()
-    } catch (error) {
-      console.error("Error submitting form:", error)
-    } finally {
-      setIsSubmitting(false)
-    }
+        const result = await bookDemo(data);
+        
+        if (result.success) {
+          // Success - close the modal and reset the form
+          setOpen(false);
+          form.reset();
+          toast.success(result.message); // Show success message
+        } else if (result.errors) {
+          // Handle form errors
+          Object.entries(result.errors).forEach(([field, messages]) => {
+            form.setError(field as keyof DemoFormValues, {
+              type: "manual",
+              message: Array.isArray(messages) ? messages.join(", ") : String(messages),
+            });
+          });
+          toast.error(result.message);
+        } else {
+          toast.error(result.message || "Failed to book demo");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        toast.error("An unexpected error occurred");
+      } finally {
+        setIsSubmitting(false);
+      }
   }
 
   return (

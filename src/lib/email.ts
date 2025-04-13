@@ -1,53 +1,120 @@
-import { Resend } from "resend";
-import { ReactNode } from "react";
+// import { Resend } from "resend";
+// import { ReactNode } from "react";
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-if (!RESEND_API_KEY) {
-    throw new Error("Missing RESEND_API_KEY environment variable");
-}
+// if (!RESEND_API_KEY) {
+//     throw new Error("Missing RESEND_API_KEY environment variable");
+// }
 
-const resend = new Resend(RESEND_API_KEY);
+// const resend = new Resend(RESEND_API_KEY);
+
+// interface EmailOptions {
+//     to: string | string[];
+//     subject: string;
+//     body: ReactNode;
+//     from?: string;
+//     cc?: string | string[];
+//     bcc?: string | string[];
+//     replyTo?: string;
+// }
+
+// export async function sendEmail({
+//     to,
+//     subject,
+//     body,
+//     from = process.env.EMAIL_FROM,
+//     cc,
+//     bcc,
+//     replyTo,
+// }: EmailOptions) {
+//     if (!from) {
+//         throw new Error("Missing EMAIL_FROM environment variable");
+//     }
+
+//     try {
+//         const { data, error } = await resend.emails.send({
+//             from,
+//             to,
+//             subject,
+//             react: body,
+//             cc,
+//             bcc,
+//             replyTo,
+//         });
+
+//         if (error) {
+//             throw error;
+//         }
+//         return data;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+import { render } from "@react-email/render";
+import nodemailer from "nodemailer";
+import { ReactElement } from "react";
 
 interface EmailOptions {
-    to: string | string[];
-    subject: string;
-    body: ReactNode;
-    from?: string;
-    cc?: string | string[];
-    bcc?: string | string[];
-    replyTo?: string;
+  to: string | string[];
+  subject: string;
+  body: ReactElement;
+  from?: string;
+  cc?: string | string[];
+  bcc?: string | string[];
+  replyTo?: string;
 }
 
+// Create transporter (should be cached and reused)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER ,
+    pass: process.env.GMAIL_PASSWORD 
+  },
+});
+
 export async function sendEmail({
-    to,
-    subject,
-    body,
-    from = process.env.EMAIL_FROM,
-    cc,
-    bcc,
-    replyTo,
+  to,
+  subject,
+  body,
+  from = process.env.EMAIL_FROM || process.env.GMAIL_USER,
+  cc,
+  bcc,
+  replyTo,
 }: EmailOptions) {
-    if (!from) {
-        throw new Error("Missing EMAIL_FROM environment variable");
-    }
+  if (!from) {
+    throw new Error("Missing EMAIL_FROM environment variable");
+  }
 
-    try {
-        const { data, error } = await resend.emails.send({
-            from,
-            to,
-            subject,
-            react: body,
-            cc,
-            bcc,
-            replyTo,
-        });
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_PASSWORD) {
+    throw new Error("Missing Gmail credentials in environment variables");
+  }
 
-        if (error) {
-            throw error;
-        }
-        return data;
-    } catch (error) {
-        throw error;
-    }
+  try {
+    const html = await render(body);
+    const mailOptions = {
+      from,
+      to: Array.isArray(to) ? to.join(", ") : to,
+      subject,
+      html,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    return info;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
 }

@@ -302,7 +302,7 @@ model DemoBooking {
   id            String        @id @default(uuid())
   firstName     String
   lastName      String
-  email         String        @unique
+  email         String
   companyName   String?
   phoneNumber   String?
   preferredDate DateTime
