@@ -55,21 +55,12 @@
 
 
 
-
-
-
-
-
-
-
-import { render } from "@react-email/render";
 import nodemailer from "nodemailer";
-import { ReactElement } from "react";
 
 interface EmailOptions {
   to: string | string[];
   subject: string;
-  body: ReactElement;
+  body: string; // Changed from ReactElement to string
   from?: string;
   cc?: string | string[];
   bcc?: string | string[];
@@ -80,15 +71,15 @@ interface EmailOptions {
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER ,
-    pass: process.env.GMAIL_PASSWORD 
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASSWORD,
   },
 });
 
 export async function sendEmail({
   to,
   subject,
-  body,
+  body, // Now expects an HTML string
   from = process.env.EMAIL_FROM || process.env.GMAIL_USER,
   cc,
   bcc,
@@ -103,18 +94,22 @@ export async function sendEmail({
   }
 
   try {
-    const html = await render(body);
+    // No need to render, 'body' is already HTML
     const mailOptions = {
       from,
       to: Array.isArray(to) ? to.join(", ") : to,
       subject,
-      html,
+      html: body, // Use the provided HTML string directly
+      cc: cc ? (Array.isArray(cc) ? cc.join(", ") : cc) : undefined,
+      bcc: bcc ? (Array.isArray(bcc) ? bcc.join(", ") : bcc) : undefined,
+      replyTo: replyTo,
     };
 
     const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: %s", info.messageId);
     return info;
   } catch (error) {
     console.error("Error sending email:", error);
-    throw error;
+    throw error; 
   }
 }

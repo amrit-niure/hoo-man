@@ -2,12 +2,18 @@
 
 import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/email";
-import React from "react";
 import { demoFormSchema, DemoFormValues } from "./validation";
+import { getUserConfirmationHtml } from "@/components/email/get-user-confirmation-html";
+import { getAdminNotificationHtml } from "@/components/email/get-admin-notification-html";
 
 export const bookDemo = async (formData: DemoFormValues) => {
     // Validate the form data with Zod
     const validatedFields = demoFormSchema.safeParse(formData);
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+
+    if (!ADMIN_EMAIL) {
+        throw new Error("Missing ADMIN_EMAIL environment variable");
+    }
 
     // Return early if the form data is invalid
     if (!validatedFields.success) {
@@ -30,15 +36,25 @@ export const bookDemo = async (formData: DemoFormValues) => {
                 notes: validatedFields.data.notes,
             },
         });
+        const userHtmlBody = getUserConfirmationHtml(validatedFields.data.firstName, validatedFields.data.preferredDate);
         await sendEmail({
             to: validatedFields.data.email,
-            subject: "Demo Booking Confirmation",
-            body: React.createElement(
-                'div',
-                null,
-                React.createElement('h1', null, 'Thank you for booking a demo!'),
-                React.createElement('p', null, 'We will be in touch soon.')
-            ),
+            subject: `Your Demo Booking for Hoo-man is Confirmed!`,
+            body: userHtmlBody,
+        });
+
+        // 2. Send Notification Email to Admin
+        const adminHtmlBody = getAdminNotificationHtml(
+            validatedFields.data.firstName,
+            validatedFields.data.email,
+            validatedFields.data.preferredDate,
+            validatedFields.data.companyName,
+            validatedFields.data.notes,
+        );
+        await sendEmail({
+            to: ADMIN_EMAIL,
+            subject: `🚀 New Demo Booking: ${validatedFields.data.firstName} for Hoo-man`,
+            body: adminHtmlBody,
         });
 
         return {
