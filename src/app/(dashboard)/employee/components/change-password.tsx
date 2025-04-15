@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { authClient } from "@/lib/auth-client"
 import { toast } from "sonner"
+import { useState } from "react"
 
 const formSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required"),
@@ -21,6 +22,7 @@ const formSchema = z.object({
 })
 
 export default function ChangePassword() {
+  const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,17 +32,23 @@ export default function ChangePassword() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true)
     const res = await authClient.changePassword({
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
     })
-    if(res.data?.token){
-        toast.success("Password changed successfully")
-        form.reset()
+    if (res.error) {
+      toast.error(res.error.message)
+      setIsLoading(false)
+      return
     }
-    if(res.error){
-        toast.error(res.error.message)
+    if (res.data) {
+      toast.success("Password updated successfully")
+      form.reset()
+      setIsLoading(false)
+      return
     }
+
   }
 
   return (
@@ -80,7 +88,7 @@ export default function ChangePassword() {
             />
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="ml-auto">
+            <Button type="submit" className="ml-auto" disabled={isLoading}>
               Update Password
             </Button>
           </CardFooter>
