@@ -29,8 +29,7 @@ import { toast } from "sonner"
 // }
 
 function SubmitButton() {
-  const { pending, data } = useFormStatus()
-  console.log(data)
+  const { pending } = useFormStatus()
   return (
     <Button type="submit" disabled={pending} className="mt-4">
       {pending ? "Saving..." : "Save Documents"}

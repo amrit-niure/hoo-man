@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/app/utils/hooks";
 import { LeaveHistoryTable } from "./leave-history";
 import { ApplyLeaveForm } from "./apply-leave-form";
+import { Badge } from "@/components/ui/badge";
 
 export const dynamic = 'force-dynamic';
 
@@ -14,10 +15,28 @@ export default async function EmployeeLeavePage() {
     where: { userId: user?.id },
     include: {
       leaveRequests: {
-        orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' }
       }
     }
-  });
+    });
+
+  const currentYear = new Date().getFullYear();
+
+  const totalLeaveDaysTaken = employee?.leaveRequests
+    .filter(
+      leave =>
+        leave.status === "APPROVED" &&
+        new Date(leave.startDate).getFullYear() === currentYear
+    )
+    .reduce((total, leave) => {
+      const startDate = new Date(leave.startDate);
+      const endDate = new Date(leave.endDate);
+      const daysTaken =
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1; // Include the start day
+      return total + daysTaken;
+    }, 0) || 0;
+
+  const remainingLeaves = 20 - totalLeaveDaysTaken;
 
   if (!employee) return <div>Employee not found</div>;
 
@@ -34,6 +53,8 @@ export default async function EmployeeLeavePage() {
       <Card>
         <CardHeader>
           <CardTitle>New Leave Request</CardTitle>
+          <p className="text-sm text-muted-foreground">You have <Badge  className="mx-2">{remainingLeaves}</Badge> days of leave remaining this year.</p>
+        
         </CardHeader>
         <CardContent>
           <ApplyLeaveForm employeeId={employee.id} />

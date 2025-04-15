@@ -53,6 +53,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onClose }) => {
       const result = await addEmployee(data);
       if (result.success) {
         toast.success(result.message);
+        window.location.reload();   
       } else {
         toast.error(result.message);
       }

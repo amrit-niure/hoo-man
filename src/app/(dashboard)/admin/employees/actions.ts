@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { requireCompany } from "@/app/utils/hooks";
 import { response } from "@/app/utils/response";
+import { sendEmail } from "@/lib/email";
 
 const registerEmployee = async ({ name, email, password }: { name: string, email: string, password: string }) => {
     const res = await auth.api.signUpEmail({
@@ -51,7 +52,20 @@ export const addEmployee = async (data: IAddEmployee) => {
                 companyProfileId: company.id,
             }
         });
-        revalidatePath("/admin/employees", "page")
+        await sendEmail({
+            to: validateEmployeeData.email,
+            subject: "Welcome to our company",
+            body: `Hello ${validateEmployeeData.name},\n\nWelcome to our company! We are excited to have you on board.\n\n
+            Your credentials are as follows:\n\n
+            Email: ${validateEmployeeData.email}\n
+            Password: ${validateEmployeeData.password}\n\n
+            Please log in to your account and change your password as soon as possible.\n\n
+            If you have any questions or need assistance, feel free to reach out to us.\n\n
+            Thank you for joining us!\n\n
+
+            \n\nBest regards,\n ${company.companyName} Team`,
+        });
+        revalidatePath("/admin/employees");
         return response(true, "Employee added successfully", res.user.id)
     } catch (error) {
         console.error("Error adding employee:", error);

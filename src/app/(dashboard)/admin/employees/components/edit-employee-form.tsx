@@ -57,6 +57,7 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ employee, onClose }
       if (result.success) {
         toast.success("Employee updated successfully");
         onClose();
+        window.location.reload();
       } else {
         toast.error(result.message);
       }

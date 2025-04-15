@@ -9,8 +9,6 @@ export const ourFileRouter = {
     pdf: { maxFileSize: "16MB" },
     image: { maxFileSize: "8MB" },
     text: { maxFileSize: "4MB" },
-    audio: { maxFileSize: "8MB" },
-    video: { maxFileSize: "16MB" },
   })
     // Set permissions and file types for this FileRoute
     .middleware(async () => {

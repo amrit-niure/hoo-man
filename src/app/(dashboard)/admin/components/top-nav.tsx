@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,10 +17,11 @@ import { Notifications } from "./notifications";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
-
 export function TopNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { data } = authClient.useSession();
+
   const pathSegments = pathname?.split("/").filter(Boolean);
 
   return (
@@ -56,9 +56,15 @@ export function TopNav() {
                     src={ ""}
                     alt={""}
                   />
-                  <AvatarFallback>
-                    {"AN"}
-                  </AvatarFallback>
+                    <AvatarFallback>
+                    {data?.user.name
+                    ? data.user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                    : "?"}
+                    </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -66,22 +72,14 @@ export function TopNav() {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                   Amrit Niure
+                  {data?.user.name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    amrit@gmail.com
+                  {data?.user.email}
                   </p>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/employer/profile/company-profile">Profile</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/employer/profile/edit-company-profile/">
-                  Settings
-                </Link>
-              </DropdownMenuItem>
+
               <DropdownMenuItem onClick={async () => {
                 await authClient.signOut({
                   fetchOptions: {

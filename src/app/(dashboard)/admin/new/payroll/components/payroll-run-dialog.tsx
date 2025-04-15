@@ -15,6 +15,7 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
+import React from "react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -42,6 +43,7 @@ export function CreatePayrollRunDialog() {
 
     await createAndProcessPayrollRun(formData);
     router.refresh();
+// window.location.reload()
   }
 
   return (

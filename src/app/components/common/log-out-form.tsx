@@ -5,7 +5,6 @@ import React from "react";
 export default function LogOutForm() {
   return (
     <form
-    //   action={logOut}
     >
       <button type="submit" className="w-full flex items-center gap-2">
         <LogOut

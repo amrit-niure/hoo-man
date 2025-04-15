@@ -120,6 +120,7 @@ function ClockInOutCard({
         toast.success(result.message, {
           icon: <Check className="h-5 w-5 text-green-500" />,
         });
+        window.location.reload(); // Refresh the page to reflect the changes
       } else {
         toast.error(result.message, {
           icon: <X className="h-5 w-5 text-red-500" />,

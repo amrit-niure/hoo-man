@@ -10,7 +10,6 @@ import {
   FileText,
  LayoutDashboard,
   Users,
-  Command,
 } from "lucide-react";
 import {
   Sidebar,
@@ -26,6 +25,7 @@ import {
   Collapsible,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import Image from "next/image";
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -109,11 +109,17 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
                 <Link href="/">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                    <Command className="size-4" />
+                  <div className="flex  items-center justify-center rounded-lg  text-primary-foreground">
+                  <Image 
+                  width={32}
+                  height={32}
+                  src="/placeholder.png"
+                  alt="Logo"
+                  className="h-8 w-8"
+                  />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">HRM - AIH</span>
+                    <span className="truncate font-semibold">Hoo-man</span>
                     <span className="truncate text-xs">Group 8</span>
                   </div>
                 </Link>

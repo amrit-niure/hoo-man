@@ -37,13 +37,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "next-themes";
 import { DemoBookingModal } from "@/components/demo-booking-modal";
 
-
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  
+
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => {
@@ -125,10 +124,21 @@ export default function LandingPage() {
       >
         <div className="container flex h-16 items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-2 font-bold px-4">
-            <div className="size-8 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground">
-              H
-            </div>
-            <span>Hoo-man</span>
+            <Link href="/">
+              <div className="flex  items-center justify-center rounded-lg  text-primary-foreground">
+                <Image
+                  width={32}
+                  height={32}
+                  src="/placeholder.png"
+                  alt="Logo"
+                  className="h-12 w-12"
+                />
+              </div>
+              {/* <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">HRM - AIH</span>
+                <span className="truncate text-xs">Group 8</span>
+              </div> */}
+            </Link>
           </div>
           <nav className="hidden md:flex gap-8">
             <Link
@@ -289,10 +299,7 @@ export default function LandingPage() {
                 efficiency across your organization.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link
-                  href={"#pricing"}
-                  className={buttonVariants()}
-                >
+                <Link href={"#pricing"} className={buttonVariants()}>
                   Start Free Trial
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
@@ -826,18 +833,16 @@ export default function LandingPage() {
                   studentId: "217908",
                   github: "https://github.com/amrit-niure",
                   twitter: "https://twitter.com/amrit-niure",
-                  image:
-                    "/team/amrit.jpg",
+                  image: "/team/amrit.jpg",
                 },
                 {
                   name: "Prajita Shrestha",
                   role: "Frontend Developer & UI/UX Designer",
                   email: "217838@students.aih.edu.au",
                   studentId: "217838",
-                  github: "https://github.com/prajita",
+                  github: "https://github.com/PrajitaShrest",
                   twitter: "https://twitter.com/prajita",
-                  image:
-                    "/team/prajita.jpg",
+                  image: "/team/prajita.jpg",
                 },
                 {
                   name: "Ramesh Adhikari",
@@ -846,8 +851,7 @@ export default function LandingPage() {
                   studentId: "221860",
                   github: "https://github.com/ramesh",
                   twitter: "https://twitter.com/ramesh",
-                  image:
-                    "/team/ramesh.jpg",
+                  image: "/team/ramesh.jpg",
                 },
                 {
                   name: "Ashim Adhikari",
@@ -856,8 +860,7 @@ export default function LandingPage() {
                   studentId: "217667",
                   github: "https://github.com/ashim",
                   twitter: "https://twitter.com/ashim",
-                  image:
-                    "/team/ashim.jpg",
+                  image: "/team/ashim.jpg",
                 },
               ].map((member, i) => (
                 <motion.div
@@ -873,7 +876,7 @@ export default function LandingPage() {
                       src={member.image}
                       alt={member.name}
                       fill
-                      style={{objectFit:"cover"}}
+                      style={{ objectFit: "cover" }}
                       className="rounded-t-lg rounded-2xl"
                     />
                   </div>

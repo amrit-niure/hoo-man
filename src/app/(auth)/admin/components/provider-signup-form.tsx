@@ -19,6 +19,7 @@ import { CustomSpinner } from "@/app/components/common/spinner";
 import { PasswordInput } from "@/app/components/ui-extension/password-input";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { sendEmailAction } from "./actions";
 
 export default function ProviderSignUpForm() {
   const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ export default function ProviderSignUpForm() {
 
   async function onSubmit(values: ISignUp) {
     setLoading(true);
-    await authClient.signUp.email(
+    const data = await authClient.signUp.email(
       {
         name: values.orgName,
         email: values.email,
@@ -56,9 +57,11 @@ export default function ProviderSignUpForm() {
         },
       }
     );
-    setLoading(false);
+    if (data?.data?.user) {
+      await sendEmailAction(data.data.user.email, data.data.user.name);
+      setLoading(false);
+    }
   }
-
   return (
     <Form {...form}>
       <form
