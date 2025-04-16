@@ -7,6 +7,7 @@ import {
   CalendarDays,
   Clock,
   CreditCard,
+  DollarSign,
   FileText,
  LayoutDashboard,
   Users,
@@ -83,6 +84,11 @@ export function AppSidebar({ className, ...props }: SidebarNavProps) {
       title: "Documents",
       href: "/admin/documents",
       icon: FileText,
+    },
+    {
+      title: "Upgrade Plan",
+      href: "/#pricing",
+      icon: DollarSign,
     },
     // {
     //   title: "Reports",

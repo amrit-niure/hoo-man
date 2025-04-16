@@ -77,7 +77,7 @@ export function DemoBookingModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Book a Demo</Button>
+        <Button variant="outline" className="text-black">Book a Demo</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>

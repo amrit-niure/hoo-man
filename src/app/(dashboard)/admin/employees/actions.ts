@@ -23,6 +23,7 @@ const registerEmployee = async ({ name, email, password }: { name: string, email
 
 export const addEmployee = async (data: IAddEmployee) => {
     try {
+        // First validate the input data
         const signUpData = {
             orgName: data.name,
             email: data.email,
@@ -32,12 +33,49 @@ export const addEmployee = async (data: IAddEmployee) => {
         const validateSignUpData = signUpFormSchema.parse(signUpData);
         const validateEmployeeData = addEmployeeSchema.parse(data);
 
+        // Get the company and check employee limit
+        const company = await requireCompany();
+        
+        // Get current employee count
+        const employeeCount = await prisma.employee.count({
+            where: { companyProfileId: company.id }
+        });
+
+        // Determine maximum allowed employees based on plan
+        let maxEmployees;
+        switch (company.plan) {
+            case 'FREE':
+                maxEmployees = 3;
+                break;
+            case 'BASIC':
+                maxEmployees = 10;
+                break;
+            case 'PRO':
+                maxEmployees = 30;
+                break;
+            case 'ENTERPRISE':
+                maxEmployees = 50;
+                break;
+            default:
+                maxEmployees = 3; // Default to free plan limit
+        }
+
+        // Check if employee limit is reached
+        if (employeeCount >= maxEmployees) {
+            throw new Error(
+                `You have reached the maximum number of employees (${maxEmployees}) for your ${company.plan} plan. ` +
+                'Please upgrade your plan to add more employees.'
+            );
+        }
+
+        // Register the employee user
         const res = await registerEmployee({
             name: validateSignUpData.orgName,
             email: validateSignUpData.email,
             password: validateSignUpData.password,
         });
-        const company = await requireCompany()
+
+        // Create the employee record
         await prisma.employee.create({
             data: {
                 name: validateEmployeeData.name,
@@ -52,6 +90,8 @@ export const addEmployee = async (data: IAddEmployee) => {
                 companyProfileId: company.id,
             }
         });
+
+        // Send welcome email
         await sendEmail({
             to: validateEmployeeData.email,
             subject: "Welcome to our company",
@@ -62,17 +102,16 @@ export const addEmployee = async (data: IAddEmployee) => {
             Please log in to your account and change your password as soon as possible.\n\n
             If you have any questions or need assistance, feel free to reach out to us.\n\n
             Thank you for joining us!\n\n
-
             \n\nBest regards,\n ${company.companyName} Team`,
         });
+
         revalidatePath("/admin/employees");
-        return response(true, "Employee added successfully", res.user.id)
+        return response(true, "Employee added successfully", res.user.id);
     } catch (error) {
         console.error("Error adding employee:", error);
-        return response(false, "Failed to add employee", error)
+        return response(false, error instanceof Error ? error.message : "Failed to add employee", error);
     }
-
-}
+};
 
 export async function updateEmployee(data: IUpdateEmployee) {
     try {

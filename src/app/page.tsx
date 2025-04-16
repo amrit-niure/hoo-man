@@ -36,10 +36,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "next-themes";
 import { DemoBookingModal } from "@/components/demo-booking-modal";
+import { authClient } from "@/lib/auth-client";
 
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data } = authClient.useSession();
+  const isAuthenticated = data?.user !== undefined;
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -186,10 +189,17 @@ export default function LandingPage() {
             >
               Sign In
             </Link>
-            <Link href={"/signin"} className={buttonVariants()}>
-              Get Started
-              <ChevronRight className="ml-1 size-4" />
-            </Link>
+            {isAuthenticated ? (
+              <Link href={"/admin"} className={buttonVariants()}>
+                Go to Dashboard
+                <ChevronRight className="ml-1 size-4" />
+              </Link>
+            ) : (
+              <Link href={"/signin"} className={buttonVariants()}>
+                Get Started
+                <ChevronRight className="ml-1 size-4" />
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-4 md:hidden ">
             <Button
@@ -300,7 +310,7 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link href={"#pricing"} className={buttonVariants()}>
-                  Start Free Trial
+                  Get Started
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
                 <DemoBookingModal />
@@ -308,11 +318,11 @@ export default function LandingPage() {
               <div className="flex items-center justify-center gap-4 mt-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Check className="size-4 text-primary" />
-                  <span>14-day trial</span>
+                  <span>Free tier available</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Check className="size-4 text-primary" />
-                  <span>Cancel anytime</span>
+                  <span>Cancel the subscription any time.</span>
                 </div>
               </div>
             </motion.div>
@@ -588,46 +598,47 @@ export default function LandingPage() {
                     {[
                       {
                         name: "Basic",
-                        price: "$49",
+                        price: "$10",
                         description: "Perfect for small teams and startups.",
                         features: [
                           "Up to 10 employees",
                           "Basic employee management",
-                          "Manual payroll",
+                          "Payroll Management",
+                          "Leave Management",
                         ],
-                        cta: "Start Free Trial",
+                        cta: "Get Started",
                         paymentLink:
-                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
+                          "https://buy.stripe.com/test_8wM3e852JdjGfKgeVa",
                       },
                       {
                         name: "Pro",
-                        price: "$99",
+                        price: "$30",
                         description: "Ideal for growing businesses.",
                         features: [
-                          "Up to 50 employees",
-                          "Advanced roster management",
-                          "Automated payroll",
-                          "Leave request tracking",
+                          "Up to 30 employees",
+                          "Basic employee management",
+                          "Payroll Management",
+                          "Leave Management",
                         ],
-                        cta: "Start Free Trial",
+                        cta: "Get Started",
                         popular: true,
                         paymentLink:
-                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
+                          "https://buy.stripe.com/test_4gw2a47aRgvSeGcaET",
                       },
                       {
                         name: "Enterprise",
-                        price: "$249",
+                        price: "$50",
                         description:
                           "For large organizations with complex needs.",
                         features: [
-                          "Unlimited employees",
-                          "Custom workflows",
-                          "Advanced analytics",
-                          "Priority support",
+                          "50 employees",
+                          "Basic employee management",
+                          "Payroll Management",
+                          "Leave Management",
                         ],
-                        cta: "Start Free Trial",
+                        cta: "Get Started",
                         paymentLink:
-                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
+                          "https://buy.stripe.com/test_4gw8ysfHn4NaeGc7sG",
                       },
                     ].map((plan, i) => (
                       <motion.div
@@ -670,19 +681,35 @@ export default function LandingPage() {
                                 </li>
                               ))}
                             </ul>
-                            <Link
-                              href={plan.paymentLink}
-                              className={buttonVariants({
-                                variant: plan.popular ? "default" : "outline",
-                                className: ` !rounded-full ${
-                                  plan.popular
-                                    ? "bg-primary hover:bg-primary/90"
-                                    : "bg-muted hover:bg-muted/80"
-                                }`,
-                              })}
-                            >
-                              {plan.cta}
-                            </Link>
+                            {isAuthenticated ? (
+                              <Link
+                                href={plan.paymentLink}
+                                className={buttonVariants({
+                                  variant: plan.popular ? "default" : "outline",
+                                  className: ` !rounded-full ${
+                                    plan.popular
+                                      ? "bg-primary hover:bg-primary/90"
+                                      : "bg-muted hover:bg-muted/80"
+                                  }`,
+                                })}
+                              >
+                                {plan.cta}
+                              </Link>
+                            ) : (
+                              <Link
+                                href={"/signin"}
+                                className={buttonVariants({
+                                  variant: plan.popular ? "default" : "outline",
+                                  className: ` !rounded-full ${
+                                    plan.popular
+                                      ? "bg-primary hover:bg-primary/90"
+                                      : "bg-muted hover:bg-muted/80"
+                                  }`,
+                                })}
+                              >
+                                {plan.cta}
+                              </Link>
+                            )}
                           </CardContent>
                         </Card>
                       </motion.div>
@@ -694,46 +721,47 @@ export default function LandingPage() {
                     {[
                       {
                         name: "Basic",
-                        price: "$40",
+                        price: "$8",
                         description: "Perfect for small teams and startups.",
                         features: [
                           "Up to 10 employees",
                           "Basic employee management",
-                          "Manual payroll",
+                          "Payroll Management",
+                          "Leave Management",
                         ],
-                        cta: "Start Free Trial",
+                        cta: "Get Started",
                         paymentLink:
-                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
+                          "https://buy.stripe.com/test_00gaGA9iZ93qdC8aER",
                       },
                       {
                         name: "Pro",
-                        price: "$80",
+                        price: "$25",
                         description: "Ideal for growing businesses.",
                         features: [
                           "Up to 50 employees",
-                          "Advanced roster management",
-                          "Automated payroll",
-                          "Leave request tracking",
+                          "Basic employee management",
+                          "Payroll Management",
+                          "Leave Management",
                         ],
-                        cta: "Start Free Trial",
+                        cta: "Get Started",
                         popular: true,
                         paymentLink:
-                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
+                          "https://buy.stripe.com/test_dR68ysdzfcfC7dK14g",
                       },
                       {
                         name: "Enterprise",
-                        price: "$200",
+                        price: "$45",
                         description:
                           "For large organizations with complex needs.",
                         features: [
                           "Unlimited employees",
-                          "Custom workflows",
-                          "Advanced analytics",
-                          "Priority support",
+                          "Basic employee management",
+                          "Payroll Management",
+                          "Leave Management",
                         ],
-                        cta: "Start Free Trial",
+                        cta: "Get Started",
                         paymentLink:
-                          "https://buy.stripe.com/test_aEUcOIan3a7u0Pm7sC",
+                          "https://buy.stripe.com/test_cN23e8dzfbby7dKfZ9",
                       },
                     ].map((plan, i) => (
                       <motion.div
@@ -776,16 +804,35 @@ export default function LandingPage() {
                                 </li>
                               ))}
                             </ul>
-                            <Button
-                              className={`w-full mt-auto rounded-full ${
-                                plan.popular
-                                  ? "bg-primary hover:bg-primary/90"
-                                  : "bg-muted hover:bg-muted/80"
-                              }`}
-                              variant={plan.popular ? "default" : "outline"}
-                            >
-                              {plan.cta}
-                            </Button>
+                            {isAuthenticated ? (
+                              <Link
+                                href={plan.paymentLink}
+                                className={buttonVariants({
+                                  variant: plan.popular ? "default" : "outline",
+                                  className: ` !rounded-full ${
+                                    plan.popular
+                                      ? "bg-primary hover:bg-primary/90"
+                                      : "bg-muted hover:bg-muted/80"
+                                  }`,
+                                })}
+                              >
+                                {plan.cta}
+                              </Link>
+                            ) : (
+                              <Link
+                                href={"/signin"}
+                                className={buttonVariants({
+                                  variant: plan.popular ? "default" : "outline",
+                                  className: ` !rounded-full ${
+                                    plan.popular
+                                      ? "bg-primary hover:bg-primary/90"
+                                      : "bg-muted hover:bg-muted/80"
+                                  }`,
+                                })}
+                              >
+                                {plan.cta}
+                              </Link>
+                            )}
                           </CardContent>
                         </Card>
                       </motion.div>
@@ -1032,11 +1079,14 @@ export default function LandingPage() {
                 HR processes with Hoo-man.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                <Button size="lg" variant="secondary">
-                  Start Free Trial
+                <Link
+                  href={"#pricing"}
+                  className={buttonVariants({ variant: "secondary" })}
+                >
+                  Get Started
                   <ArrowRight className="ml-2 size-4" />
-                </Button>
-                <Button size="lg">Schedule a Demo</Button>
+                </Link>
+                <DemoBookingModal />
               </div>
             </motion.div>
           </div>
@@ -1216,7 +1266,7 @@ export default function LandingPage() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/privacy-policy"
                     className="text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Privacy Policy
@@ -1224,7 +1274,7 @@ export default function LandingPage() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="terms-of-service"
                     className="text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Terms of Service
@@ -1239,13 +1289,13 @@ export default function LandingPage() {
             </p>
             <div className="flex gap-4">
               <Link
-                href="#"
+                href="/privacy-policy"
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
-                href="#"
+                href="/terms-of-service"
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 Terms of Service
