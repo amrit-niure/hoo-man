@@ -29,6 +29,8 @@ export default function ProviderSignIn() {
               </p>
             </div>
             <SignInForm />
+
+
             <div className="text-center text-sm mt-4 flex flex-col items-center space-y-2">
               <span className="text-muted-foreground">
                 Are you an employer without an account?{" "}
@@ -42,6 +44,26 @@ export default function ProviderSignIn() {
               >
                 Sign up here
               </Link>
+            </div>
+            <div className="text-center text-sm mt-4 flex flex-col items-center space-y-2">
+              <span className="text-muted-foreground">
+                By signing up, you agree to our{" "}
+              </span>
+              <div className="flex space-x-2">
+                <a
+                  href="/terms-of-service"
+                  className="text-blue-500 hover:underline"
+                >
+                  Terms of Service
+                </a>
+                <span>|</span>
+                <a
+                  href="/privacy-policy"
+                  className="text-blue-500 hover:underline"
+                >
+                  Privacy Policy
+                </a>
+              </div>
             </div>
           </div>
         </div>

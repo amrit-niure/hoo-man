@@ -89,7 +89,7 @@ import { Badge } from "@/components/ui/badge";
                   >
                     Download
                   </Button>
-                  <Link href={`/dashboard/payslips/${payslip.id}`}>
+                  <Link href={`/employee/payslips/${payslip.id}`}>
                     <Button variant="ghost" size="sm">
                       View
                     </Button>

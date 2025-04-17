@@ -67,7 +67,7 @@ export function PayslipCard({ payslip }: PayslipCardProps) {
 
         <div className="mt-4 flex gap-2">
           <Button variant="outline" size="sm" asChild>
-            <Link href={`/dashboard/payslips/${payslip.id}`}>View Details</Link>
+            <Link href={`/employee/payslips/${payslip.id}`}>View Details</Link>
           </Button>
           <Button variant="secondary" size="sm" asChild>
             <Link
