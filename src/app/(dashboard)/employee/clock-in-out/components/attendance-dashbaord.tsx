@@ -229,7 +229,12 @@ function ClockInOutCard({
                           : "Clock Out"}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {format(new Date(attendance.clockInTime), "hh:mm a")}
+                        {attendance.clockOutTime === null
+                          ? format(new Date(attendance.clockInTime), "hh:mm a")
+                          : format(
+                              new Date(attendance.clockOutTime),
+                              "hh:mm a"
+                            )}
                       </p>
                     </div>
                   </div>
@@ -266,7 +271,7 @@ function CalendarCard({
   monthlyAttendances: Attendance[];
 }) {
   const [date, setDate] = useState<Date>(new Date());
-  // eslint-disable-next-line 
+  // eslint-disable-next-line
   const [attendanceDates, setAttendanceDates] = useState<Date[]>(
     initialMonthlyAttendances.map((a) => new Date(a.clockInTime))
   );
@@ -321,7 +326,7 @@ function AttendanceHistory({
         toast.error(result.message || "Error fetching attendance history");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Failed to fetch attendance history");
     } finally {
       setLoading(false);
